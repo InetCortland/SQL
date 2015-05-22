@@ -1,0 +1,10 @@
+
+Function created.
+
+Enter D.O.B Formatted to : yyyy-mm-dd  :1990-09-17
+old   9: 	v_BirthDate := TO_DATE('&dob', 'YYYY/MM/DD');
+new   9: 	v_BirthDate := TO_DATE('1990-09-17', 'YYYY/MM/DD');
+The difference from now and your DOB is :   8944                                
+
+PL/SQL procedure successfully completed.
+

@@ -1,0 +1,20 @@
+SQL> ALTER TABLE Employee ADD Salary NUMBER (11,2);
+
+Table altered.
+
+SQL> Select Salary From Employee;
+
+    SALARY                                                                      
+----------                                                                      
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+
+8 rows selected.
+
+SQL> spool off

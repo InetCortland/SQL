@@ -1,0 +1,1614 @@
+-- Created and Designed by Cortland Boudreau
+-- 2015
+
+
+
+
+
+
+
+
+
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema qovlwqkk_itworks
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema qovlwqkk_itworks
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `qovlwqkk_itworks` DEFAULT CHARACTER SET latin1 ;
+USE `qovlwqkk_itworks` ;
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`company`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`company` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`company` (
+  `company_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `description` MEDIUMTEXT NULL,
+  `website` VARCHAR(150) NULL,
+  `address` VARCHAR(45) NULL,
+  `city` VARCHAR(45) NULL,
+  `province` VARCHAR(45) NULL,
+  `postal_code` VARCHAR(45) NULL,
+  `last_modified_by` INT(11) NULL,
+  `last_modified_date` DATETIME NULL,
+  PRIMARY KEY (`company_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`user` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`user` (
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(100) NOT NULL,
+  `hashed_password` TEXT NOT NULL,
+  `first_name` VARCHAR(75) NOT NULL,
+  `last_name` VARCHAR(75) NOT NULL,
+  `phone_number` CHAR(10) NULL,
+  `last_signed_on` DATE NOT NULL,
+  `created_date` DATE NOT NULL,
+  `profile_text` MEDIUMTEXT NULL,
+  `reset` TEXT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 10
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`company_contact`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`company_contact` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`company_contact` (
+  `contact_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `company_id` INT(11) NOT NULL,
+  `email_confirmed` TINYINT(1) NOT NULL,
+  `title` VARCHAR(50) NULL,
+  `user_id` INT(11) NOT NULL,
+  `preferred_name` VARCHAR(50) NULL,
+  `alt_phone` CHAR(10) NULL,
+  PRIMARY KEY (`contact_id`, `company_id`),
+  INDEX `fk_CompanyContact_Company1_idx` (`company_id` ASC),
+  INDEX `fk_company_contact_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_CompanyContact_Company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `qovlwqkk_itworks`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_company_contact_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`concentration`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`concentration` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`concentration` (
+  `concentration_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`concentration_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`student_job_status`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`student_job_status` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`student_job_status` (
+  `job_status_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`job_status_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`student`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`student` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`student` (
+  `student_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `w_number` CHAR(8) NOT NULL,
+  `school_email` VARCHAR(20) NOT NULL,
+  `email_confirmed` TINYINT(1) NOT NULL,
+  `academic_year` YEAR NOT NULL,
+  `concentration_id` INT(11) NOT NULL,
+  `job_status_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `website` VARCHAR(100) NULL,
+  `preferred_name` VARCHAR(75) NULL,
+  `alt_phone` CHAR(10) NULL,
+  PRIMARY KEY (`student_id`, `job_status_id`, `concentration_id`),
+  INDEX `fk_Student_Concentration1_idx` (`concentration_id` ASC),
+  INDEX `fk_Student_StudentJobStatus1_idx` (`job_status_id` ASC),
+  INDEX `fk_student_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_Student_Concentration1`
+    FOREIGN KEY (`concentration_id`)
+    REFERENCES `qovlwqkk_itworks`.`concentration` (`concentration_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Student_StudentJobStatus1`
+    FOREIGN KEY (`job_status_id`)
+    REFERENCES `qovlwqkk_itworks`.`student_job_status` (`job_status_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`job_post`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`job_post` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`job_post` (
+  `jobpost_id` INT NOT NULL AUTO_INCREMENT,
+  `deleted_by` INT(11) NULL DEFAULT NULL,
+  `delete_date` DATETIME NULL DEFAULT NULL,
+  `posted_date` DATE NOT NULL,
+  `expiry_date` DATE NOT NULL,
+  `content` MEDIUMTEXT NOT NULL,
+  `createdby` INT(11) NOT NULL,
+  PRIMARY KEY (`jobpost_id`),
+  INDEX `fk_job_post_user_idx` (`createdby` ASC),
+  INDEX `fk_job_post_user1_idx` (`deleted_by` ASC),
+  CONSTRAINT `fk_job_post_user`
+    FOREIGN KEY (`createdby`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_job_post_user1`
+    FOREIGN KEY (`deleted_by`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`job`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`job` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`job` (
+  `job_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(50) NOT NULL,
+  `location` VARCHAR(75) NOT NULL,
+  `createdby` INT(11) NOT NULL,
+  `emp_type` TINYINT(1) NOT NULL,
+  `temporary` TINYINT(1) NOT NULL,
+  `company_name` VARCHAR(75) NULL,
+  `jobpost_id` INT(11) NULL,
+  `company_id` INT(11) NULL,
+  PRIMARY KEY (`job_id`),
+  INDEX `fk_job_user1_idx` (`createdby` ASC),
+  INDEX `fk_job_job_post1_idx` (`jobpost_id` ASC),
+  INDEX `fk_job_company1_idx` (`company_id` ASC),
+  CONSTRAINT `fk_job_user1`
+    FOREIGN KEY (`createdby`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_job_job_post1`
+    FOREIGN KEY (`jobpost_id`)
+    REFERENCES `qovlwqkk_itworks`.`job_post` (`jobpost_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_job_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `qovlwqkk_itworks`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_coop_base`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_coop_base` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_coop_base` (
+  `we_coop_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `is_coop` TINYINT(1) NOT NULL,
+  `student_id` INT(11) NOT NULL,
+  `job_id` INT(11) NOT NULL,
+  `contact_id` INT(11) NULL,
+  INDEX `fk_WE_COOP_Student_idx` (`student_id` ASC),
+  INDEX `fk_we_coop_base_job1_idx` (`job_id` ASC),
+  INDEX `fk_we_coop_base_company_contact1_idx` (`contact_id` ASC),
+  PRIMARY KEY (`we_coop_id`),
+  CONSTRAINT `fk_WE_COOP_Student`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `qovlwqkk_itworks`.`student` (`student_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_we_coop_base_job1`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `qovlwqkk_itworks`.`job` (`job_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_we_coop_base_company_contact1`
+    FOREIGN KEY (`contact_id`)
+    REFERENCES `qovlwqkk_itworks`.`company_contact` (`contact_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`coop_employer_start`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`coop_employer_start` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`coop_employer_start` (
+  `we_coop_employer_start_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `contact_title` VARCHAR(45) NULL DEFAULT NULL,
+  `fax` CHAR(10) NULL DEFAULT NULL,
+  `start_date` DATETIME NULL DEFAULT NULL,
+  `end_date` DATETIME NULL DEFAULT NULL,
+  `employer_signature` DATETIME NULL DEFAULT NULL,
+  `tasks` MEDIUMTEXT NULL DEFAULT NULL,
+  `hazards` MEDIUMTEXT NULL DEFAULT NULL,
+  `controls` MEDIUMTEXT NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_coop_employer_start_id`),
+  INDEX `fk_COOP_Employer_Start_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_COOP_Employer_Start_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`coop_student_start`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`coop_student_start` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`coop_student_start` (
+  `we_coop_student_start_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `summer_address` VARCHAR(50) NULL DEFAULT NULL,
+  `summer_city` VARCHAR(50) NULL DEFAULT NULL,
+  `summer_postal_code` CHAR(6) NULL DEFAULT NULL,
+  `phone` CHAR(10) NULL DEFAULT NULL,
+  `emergency_contact_name` VARCHAR(75) NULL DEFAULT NULL,
+  `emergency_relationship` VARCHAR(25) NULL DEFAULT NULL,
+  `emergency_phone` CHAR(10) NULL DEFAULT NULL,
+  `release_name` TINYINT(1) NULL DEFAULT NULL,
+  `release_attendance` TINYINT(1) NULL DEFAULT NULL,
+  `release_health_conditions` TINYINT(1) NULL DEFAULT NULL,
+  `release_contact_info` TINYINT(1) NULL DEFAULT NULL,
+  `release_job_performance` TINYINT(1) NULL DEFAULT NULL,
+  `release_other` TINYINT(1) NULL DEFAULT NULL,
+  `understanding_sign` DATETIME NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_coop_student_start_id`),
+  INDEX `fk_COOP_Student_Start_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_COOP_Student_Start_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`faculty`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`faculty` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`faculty` (
+  `faculty_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  PRIMARY KEY (`faculty_id`),
+  INDEX `fk_faculty_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_faculty_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`tags`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`tags` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`tags` (
+  `tag_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(100) NOT NULL,
+  `name` VARCHAR(75) NOT NULL,
+  PRIMARY KEY (`tag_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`job_tags`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`job_tags` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`job_tags` (
+  `job_id` INT(11) NOT NULL,
+  `tag_id` INT(11) NOT NULL,
+  PRIMARY KEY (`job_id`, `tag_id`),
+  INDEX `fk_job_tags_tags1_idx` (`tag_id` ASC),
+  CONSTRAINT `fk_job_tags_tags1`
+    FOREIGN KEY (`tag_id`)
+    REFERENCES `qovlwqkk_itworks`.`tags` (`tag_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_job_tags_job_post1`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `qovlwqkk_itworks`.`job_post` (`jobpost_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`privileges_lookup`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`privileges_lookup` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`privileges_lookup` (
+  `plookup_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `privilege_name` VARCHAR(30) NOT NULL,
+  `privilege_description` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`plookup_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 12
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`user_privileges`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`user_privileges` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`user_privileges` (
+  `user_id` INT(11) NOT NULL,
+  `plookup_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `plookup_id`),
+  CONSTRAINT `fk_user_privileges_privileges_lookup1`
+    FOREIGN KEY (`plookup_id`)
+    REFERENCES `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_privileges_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `qovlwqkk_itworks`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_coop_employer_end`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_coop_employer_end` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_coop_employer_end` (
+  `we_coop_employer_end_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `interest_in_work` TINYINT(1) NULL,
+  `initiative` TINYINT(1) NULL DEFAULT NULL,
+  `organization_planning` TINYINT(1) NULL DEFAULT NULL,
+  `ability_to_learn` TINYINT(1) NULL DEFAULT NULL,
+  `oral_communication` TINYINT(1) NULL DEFAULT NULL,
+  `written_communication` TINYINT(1) NULL DEFAULT NULL,
+  `quality_of_work` TINYINT(1) NULL DEFAULT NULL,
+  `quantity_of_work` TINYINT(1) NULL DEFAULT NULL,
+  `judgement` TINYINT(1) NULL DEFAULT NULL,
+  `dependability` TINYINT(1) NULL DEFAULT NULL,
+  `interpersonal_skills` TINYINT(1) NULL DEFAULT NULL,
+  `response_to_supervision` TINYINT(1) NULL DEFAULT NULL,
+  `rules_and_policies` TINYINT(1) NULL DEFAULT NULL,
+  `attendance` TINYINT(1) NULL DEFAULT NULL,
+  `punctuality` TINYINT(1) NULL DEFAULT NULL,
+  `overall_performance` TINYINT(1) NULL DEFAULT NULL,
+  `areas_of_strength` MEDIUMTEXT NULL DEFAULT NULL,
+  `areas_to_improve` MEDIUMTEXT NULL DEFAULT NULL,
+  `recommend_details` MEDIUMTEXT NULL DEFAULT NULL,
+  `would_hire_again` MEDIUMTEXT NULL DEFAULT NULL,
+  `sign_date` DATETIME NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_coop_employer_end_id`),
+  INDEX `fk_WE_COOP_Employer_End_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_WE_COOP_Employer_End_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_coop_faculty_signoff`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_coop_faculty_signoff` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_coop_faculty_signoff` (
+  `we_faculty_signoff_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `faculty_signature` DATETIME NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  `stage` TINYINT(1) NOT NULL,
+  `faculty_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_faculty_signoff_id`),
+  INDEX `fk_WE_COOP_Faculty_Start_WE_COOP1` (`we_coop_id` ASC),
+  INDEX `fk_we_coop_faculty_signoff_faculty1_idx` (`faculty_id` ASC),
+  CONSTRAINT `fk_WE_COOP_Faculty_Start_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_we_coop_faculty_signoff_faculty1`
+    FOREIGN KEY (`faculty_id`)
+    REFERENCES `qovlwqkk_itworks`.`faculty` (`faculty_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_coop_student_end`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_coop_student_end` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_coop_student_end` (
+  `we_coop_student_end_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `relate_to_study` TINYINT(1) NULL DEFAULT NULL,
+  `supervision_adequacy` TINYINT(1) NULL DEFAULT NULL,
+  `supervisor_helpfulness` TINYINT(1) NULL DEFAULT NULL,
+  `colleague_cooperativeness` TINYINT(1) NULL DEFAULT NULL,
+  `use_training` TINYINT(1) NULL DEFAULT NULL,
+  `develop_hr_skills` TINYINT(1) NULL DEFAULT NULL,
+  `consistent_with_ability` TINYINT(1) NULL DEFAULT NULL,
+  `develop_communication` TINYINT(1) NULL DEFAULT NULL,
+  `develop_creativity` TINYINT(1) NULL DEFAULT NULL,
+  `problem_solving` TINYINT(1) NULL DEFAULT NULL,
+  `develop_critical_thinking` TINYINT(1) NULL DEFAULT NULL,
+  `faculty_advisor_help` TINYINT(1) NULL DEFAULT NULL,
+  `expectations` TINYINT(1) NULL DEFAULT NULL,
+  `work_for_again` TINYINT(1) NULL DEFAULT NULL,
+  `overall_evaluation` TINYINT(1) NULL DEFAULT NULL,
+  `would_recommend` TINYINT(1) NULL DEFAULT NULL,
+  `comments` MEDIUMTEXT NULL DEFAULT NULL,
+  `sign_date` DATETIME NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_coop_student_end_id`),
+  INDEX `fk_WE_COOP_Student_End_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_WE_COOP_Student_End_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_employer_start`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_employer_start` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_employer_start` (
+  `we_employer_start_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `contact_title` VARCHAR(45) NULL DEFAULT NULL,
+  `fax` CHAR(10) NULL DEFAULT NULL,
+  `start_date` DATETIME NULL DEFAULT NULL,
+  `end_date` DATETIME NULL DEFAULT NULL,
+  `start_hour` TIME NULL DEFAULT NULL,
+  `end_hour` TIME NULL DEFAULT NULL,
+  `contact_frequency` TINYINT(1) NULL DEFAULT NULL,
+  `tasks` MEDIUMTEXT NULL DEFAULT NULL,
+  `hazards` MEDIUMTEXT NULL DEFAULT NULL,
+  `controls` MEDIUMTEXT NULL DEFAULT NULL,
+  `sign_date` DATETIME NULL DEFAULT NULL,
+  `confidentiality` TINYINT(1) NULL DEFAULT NULL,
+  `date_safety_reviewed` DATETIME NULL DEFAULT NULL,
+  `safety_signature` DATETIME NULL DEFAULT NULL,
+  `personal_protective_equip` MEDIUMTEXT NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_employer_start_id`),
+  INDEX `fk_WE_Employer_Start_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_WE_Employer_Start_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`we_student_start`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`we_student_start` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`we_student_start` (
+  `we_student_start_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `emergency_phone` CHAR(10) NOT NULL,
+  `student_signature_date` DATETIME NOT NULL,
+  `release_name` TINYINT(1) NULL DEFAULT NULL,
+  `release_attendance` TINYINT(1) NULL DEFAULT NULL,
+  `release_health_conditions` TINYINT(1) NULL DEFAULT NULL,
+  `release_contact_info` TINYINT(1) NULL DEFAULT NULL,
+  `release_performance` TINYINT(1) NULL DEFAULT NULL,
+  `release_other` TINYINT(1) NULL DEFAULT NULL,
+  `confidentiality` TINYINT(1) NULL DEFAULT NULL,
+  `date_safety_reviewed` DATETIME NULL DEFAULT NULL,
+  `safety_signature` DATETIME NULL DEFAULT NULL,
+  `we_coop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`we_student_start_id`),
+  INDEX `fk_WE_Student_Start_WE_COOP1` (`we_coop_id` ASC),
+  CONSTRAINT `fk_WE_Student_Start_WE_COOP1`
+    FOREIGN KEY (`we_coop_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`skills`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`skills` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`skills` (
+  `skills_id` INT(11) NOT NULL,
+  `name` VARCHAR(75) NOT NULL,
+  PRIMARY KEY (`skills_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`student_skills`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`student_skills` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`student_skills` (
+  `student_id` INT(11) NOT NULL,
+  `skill_id` INT(11) NOT NULL,
+  PRIMARY KEY (`student_id`, `skill_id`),
+  INDEX `fk_student_skills_skills1_idx` (`skill_id` ASC),
+  CONSTRAINT `fk_student_skills_student1`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `qovlwqkk_itworks`.`student` (`student_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_skills_skills1`
+    FOREIGN KEY (`skill_id`)
+    REFERENCES `qovlwqkk_itworks`.`skills` (`skills_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`log_deletes`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`log_deletes` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`log_deletes` (
+  `log_deletes_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `deleted_by` INT(11) NOT NULL,
+  `deleted_date` DATETIME NOT NULL,
+  `table_affected` VARCHAR(100) NOT NULL,
+  `row_data` MEDIUMTEXT NOT NULL,
+  PRIMARY KEY (`log_deletes_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`log_inserts`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`log_inserts` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`log_inserts` (
+  `log_inserts_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `inserted_by` INT(11) NOT NULL,
+  `insert_date` DATETIME NOT NULL,
+  `table_affected` VARCHAR(100) NOT NULL,
+  `row_data` MEDIUMTEXT NOT NULL,
+  PRIMARY KEY (`log_inserts_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`log_company_edits`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`log_company_edits` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`log_company_edits` (
+  `log_company_edits_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `edit_date` DATETIME NULL,
+  `company_id` INT(11) NULL,
+  `name` VARCHAR(45) NULL,
+  `description` MEDIUMTEXT NULL,
+  `website` VARCHAR(150) NULL,
+  `address` VARCHAR(45) NULL,
+  `city` VARCHAR(45) NULL,
+  `province` VARCHAR(45) NULL,
+  `postal_code` VARCHAR(45) NULL,
+  `last_modified_by` INT(11) NULL,
+  `last_modified_date` DATETIME NULL,
+  PRIMARY KEY (`log_company_edits_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `qovlwqkk_itworks`.`company_contact_information`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `qovlwqkk_itworks`.`company_contact_information` ;
+
+CREATE TABLE IF NOT EXISTS `qovlwqkk_itworks`.`company_contact_information` (
+  `cci_id` INT(11) NOT NULL,
+  `contact_name` VARCHAR(45) NULL,
+  `contact_title` VARCHAR(45) NULL,
+  `contact_phone` CHAR(10) NULL,
+  `contact_email` VARCHAR(45) NULL,
+  `company_id` INT(11) NOT NULL,
+  PRIMARY KEY (`cci_id`),
+  INDEX `fk_company_contact_information_company1_idx` (`company_id` ASC),
+  CONSTRAINT `fk_company_contact_information_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `qovlwqkk_itworks`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_company_contact_information_we_coop_base1`
+    FOREIGN KEY (`cci_id`)
+    REFERENCES `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+USE `qovlwqkk_itworks`;
+
+DELIMITER $$
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`company_BEFORE_UPDATE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`company_BEFORE_UPDATE` BEFORE UPDATE ON `company` FOR EACH ROW
+BEGIN
+INSERT INTO log_company_edits (edit_date, company_id, name, description, website, address, city, province, postal_code, last_modified_by, last_modified_date ) 
+
+VALUES (SYSDATE(),IFNULL(OLD.company_id , 1 ),IFNULL(OLD.name ,'null'),IFNULL(OLD.description ,'null'),IFNULL(OLD.website ,'null'),IFNULL(OLD.address ,'null'),IFNULL(OLD.city ,'null'),IFNULL(OLD.province ,'null'),IFNULL(OLD.postal_code ,'null'), OLD.last_modified_by  , OLD.last_modified_date);
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`company_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`company_BEFORE_DELETE` BEFORE DELETE ON `company` FOR EACH ROW
+BEGIN
+
+
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'company', concat( IFNULL(OLD.company_id ,'null'),IFNULL(OLD.name ,'null'),IFNULL(OLD.description ,'null'),IFNULL(OLD.website ,'null'),IFNULL(OLD.address ,'null'),IFNULL(OLD.city ,'null'),IFNULL(OLD.province ,'null'),IFNULL(OLD.postal_code ,'null'),IFNULL(OLD.last_modified_by ,'null'),IFNULL(OLD.last_modified_date ,'null') ));
+
+DELETE FROM company_contact WHERE company_id = OLD.company_id;
+
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`user_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`user_BEFORE_DELETE` BEFORE DELETE ON `user` FOR EACH ROW
+BEGIN
+
+
+  INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(OLD.user_id, ", " , OLD.email , ", " , OLD.first_name , ", " ,  OLD.last_name , ", " , OLD.phone_number , ", " ,  OLD.last_signed_on, ", " , OLD.created_date , ", " , OLD.hashed_password     ));
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`company_contact_AFTER_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE TRIGGER `qovlwqkk_itworks`.`company_contact_AFTER_DELETE` AFTER DELETE ON `company_contact` FOR EACH ROW
+BEGIN
+
+
+
+  
+  INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'company_contact', concat(
+  
+  IFNULL(OLD.contact_id ,'null') , ", " , IFNULL(OLD.company_id,'null') , ", " ,IFNULL( OLD.email_confirmed,'null') , ", ",IFNULL(OLD.title,'null') , ", " ,IFNULL(OLD.user_id,'null') , ", " ,IFNULL( OLD.preferred_name,'null') , ", " ,IFNULL(OLD.alt_phone,'null')
+  
+));
+
+   DELETE FROM user WHERE user_id = OLD.user_id;
+
+
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`job_post_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`job_post_BEFORE_DELETE` BEFORE DELETE ON `job_post` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.jobpost_id ,'null'),", " ,IFNULL(OLD.deleted_by ,'null'),", " ,IFNULL(OLD.delete_date ,'null'),", " ,IFNULL(OLD.posted_date ,'null'),", " ,IFNULL(OLD.expiry_date ,'null'),", " ,IFNULL(OLD.content ,'null'),", " ,IFNULL(OLD.createdby ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`job_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`job_BEFORE_DELETE` BEFORE DELETE ON `job` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.job_id ,'null'),", " ,IFNULL(OLD.title ,'null'),", " ,IFNULL(OLD.location ,'null'),", " ,IFNULL(OLD.createdby ,'null'),", " ,IFNULL(OLD.emp_type ,'null'),", " ,IFNULL(OLD.temporary ,'null'),", " ,IFNULL(OLD.company_name ,'null'),", " ,IFNULL(OLD.jobpost_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_coop_base_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_coop_base_BEFORE_DELETE` BEFORE DELETE ON `we_coop_base` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_coop_id ,'null'),", " ,IFNULL(OLD.is_coop ,'null'),", " ,IFNULL(OLD.student_id ,'null'),", " ,IFNULL(OLD.contact_id ,'null'),", " ,IFNULL(OLD.job_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`coop_employer_start_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`coop_employer_start_BEFORE_DELETE` BEFORE DELETE ON `coop_employer_start` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_coop_employer_start_id ,'null'),", " ,IFNULL(OLD.contact_title ,'null'),", " ,IFNULL(OLD.fax ,'null'),", " ,IFNULL(OLD.start_date ,'null'),", " ,IFNULL(OLD.end_date ,'null'),", " ,IFNULL(OLD.employer_signature ,'null'),", " ,IFNULL(OLD.tasks ,'null'),", " ,IFNULL(OLD.hazards ,'null'),", " ,IFNULL(OLD.controls ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`coop_student_start_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`coop_student_start_BEFORE_DELETE` BEFORE DELETE ON `coop_student_start` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_coop_student_start_id ,'null'),", " ,IFNULL(OLD.summer_address ,'null'),", " ,IFNULL(OLD.summer_city ,'null'),", " ,IFNULL(OLD.summer_postal_code ,'null'),", " ,IFNULL(OLD.phone ,'null'),", " ,IFNULL(OLD.emergency_contact_name ,'null'),", " ,IFNULL(OLD.emergency_relationship ,'null'),", " ,IFNULL(OLD.emergency_phone ,'null'),", " ,IFNULL(OLD.release_name ,'null'),", " ,IFNULL(OLD.release_attendance ,'null'),", " ,IFNULL(OLD.release_health_conditions ,'null'),", " ,IFNULL(OLD.release_contact_info ,'null'),", " ,IFNULL(OLD.release_job_performance ,'null'),", " ,IFNULL(OLD.release_other ,'null'),", " ,IFNULL(OLD.understanding_sign ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`user_privileges_BEFORE_INSERT` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`user_privileges_BEFORE_INSERT` BEFORE INSERT ON `user_privileges` FOR EACH ROW
+BEGIN
+
+INSERT INTO log_inserts (inserted_by, insert_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user_privileges', concat(NEW.user_id , ", " , NEW.plookup_id));
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`user_privileges_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`user_privileges_BEFORE_DELETE` BEFORE DELETE ON `user_privileges` FOR EACH ROW
+BEGIN
+
+  INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(OLD.user_id, ", " , OLD.plookup_id    ));
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_coop_employer_end_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_coop_employer_end_BEFORE_DELETE` BEFORE DELETE ON `we_coop_employer_end` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_coop_employer_end_id ,'null'),", " ,IFNULL(OLD.interest_in_work ,'null'),", " ,IFNULL(OLD.initiative ,'null'),", " ,IFNULL(OLD.organization_planning ,'null'),", " ,IFNULL(OLD.ability_to_learn ,'null'),", " ,IFNULL(OLD.oral_communication ,'null'),", " ,IFNULL(OLD.written_communication ,'null'),", " ,IFNULL(OLD.quality_of_work ,'null'),", " ,IFNULL(OLD.quantity_of_work ,'null'),", " ,IFNULL(OLD.judgement ,'null'),", " ,IFNULL(OLD.dependability ,'null'),", " ,IFNULL(OLD.interpersonal_skills ,'null'),", " ,IFNULL(OLD.response_to_supervision ,'null'),", " ,IFNULL(OLD.rules_and_policies ,'null'),", " ,IFNULL(OLD.attendance  ,'null'),", " ,IFNULL(OLD.punctuality ,'null'),", " ,IFNULL(OLD.overall_performance ,'null'),", " ,IFNULL(OLD.areas_of_strength ,'null'),", " ,IFNULL(OLD.areas_to_improve ,'null'),", " ,IFNULL(OLD.recommend_details ,'null'),", " ,IFNULL(OLD.would_hire_again ,'null'),", " ,IFNULL(OLD.sign_date ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_coop_faculty_signoff_BEFORE_INSERT` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_coop_faculty_signoff_BEFORE_INSERT` BEFORE INSERT ON `we_coop_faculty_signoff` FOR EACH ROW
+BEGIN
+
+INSERT INTO log_inserts (inserted_by, insert_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'we_coop_faculty_signoff', concat(IFNULL(NEW.faculty_signature,'null') , ", " , IFNULL(NEW.we_coop_id,'null') , ", " ,IFNULL(NEW.stage,'null') , ", " ,IFNULL( NEW.faculty_id,'null') ));
+
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_coop_faculty_signoff_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_coop_faculty_signoff_BEFORE_DELETE` BEFORE DELETE ON `we_coop_faculty_signoff` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_faculty_signoff_id ,'null'),", " ,IFNULL(OLD.faculty_signature ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null'),", " ,IFNULL(OLD.stage ,'null'),", " ,IFNULL(OLD.faculty_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_coop_student_end_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_coop_student_end_BEFORE_DELETE` BEFORE DELETE ON `we_coop_student_end` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_coop_student_end_id ,'null'),", " ,IFNULL(OLD.relate_to_study ,'null'),", " ,IFNULL(OLD.supervision_adequacy ,'null'),", " ,IFNULL(OLD.supervisor_helpfulness ,'null'),", " ,IFNULL(OLD.colleague_cooperativeness ,'null'),", " ,IFNULL(OLD.use_training ,'null'),", " ,IFNULL(OLD.develop_hr_skills ,'null'),", " ,IFNULL(OLD.consistent_with_ability ,'null'),", " ,IFNULL(OLD.develop_communication ,'null'),", " ,IFNULL(OLD.develop_creativity ,'null'),", " ,IFNULL(OLD.problem_solving ,'null'),", " ,IFNULL(OLD.develop_critical_thinking ,'null'),", " ,IFNULL(OLD.faculty_advisor_help ,'null'),", " ,IFNULL(OLD.expectations ,'null'),", " ,IFNULL(OLD.work_for_again ,'null'),", " ,IFNULL(OLD.overall_evaluation ,'null'),", " ,IFNULL(OLD.would_recommend ,'null'),", " ,IFNULL(OLD.comments ,'null'),", " ,IFNULL(OLD.sign_date ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_employer_start_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_employer_start_BEFORE_DELETE` BEFORE DELETE ON `we_employer_start` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_employer_start_id ,'null'),", " ,IFNULL(OLD.contact_title ,'null'),", " ,IFNULL(OLD.fax ,'null'),", " ,IFNULL(OLD.start_date ,'null'),", " ,IFNULL(OLD.end_date ,'null'),", " ,IFNULL(OLD.start_hour ,'null'),", " ,IFNULL(OLD.end_hour ,'null'),", " ,IFNULL(OLD.contact_frequency ,'null'),", " ,IFNULL(OLD.tasks ,'null'),", " ,IFNULL(OLD.hazards ,'null'),", " ,IFNULL(OLD.controls ,'null'),", " ,IFNULL(OLD.sign_date ,'null'),", " ,IFNULL(OLD.confidentiality ,'null'),", " ,IFNULL(OLD.date_safety_reviewed ,'null'),", " ,IFNULL(OLD.safety_signature ,'null'),", " ,IFNULL(OLD.personal_protective_equip ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+USE `qovlwqkk_itworks`$$
+DROP TRIGGER IF EXISTS `qovlwqkk_itworks`.`we_student_start_BEFORE_DELETE` $$
+USE `qovlwqkk_itworks`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `qovlwqkk_itworks`.`we_student_start_BEFORE_DELETE` BEFORE DELETE ON `we_student_start` FOR EACH ROW
+BEGIN
+INSERT INTO log_deletes (deleted_by, deleted_date, table_affected, row_data) VALUES ( 1, SYSDATE(), 'user', concat(IFNULL(OLD.we_student_start_id ,'null'),", " ,IFNULL(OLD.emergency_phone ,'null'),", " ,IFNULL(OLD.student_signature_date ,'null'),", " ,IFNULL(OLD.release_name ,'null'),", " ,IFNULL(OLD.release_attendance ,'null'),", " ,IFNULL(OLD.release_health_conditions ,'null'),", " ,IFNULL(OLD.release_contact_info ,'null'),", " ,IFNULL(OLD.release_performance ,'null'),", " ,IFNULL(OLD.release_other ,'null'),", " ,IFNULL(OLD.confidentiality ,'null'),", " ,IFNULL(OLD.date_safety_reviewed ,'null'),", " ,IFNULL(OLD.safety_signature ,'null'),", " ,IFNULL(OLD.we_coop_id ,'null') ));
+END
+$$
+
+
+DELIMITER ;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`company`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (1, 'IBM', 'IBM', 'www.ibm.com', '1111 ABC st.', 'Halifax', 'NS', 'B3Y 2Y2', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (2, 'NTT Data', 'NTT Data', 'www.nttdata.com', '2222 Spring Garden rd.', 'Dartmouth', 'NS', 'B4S 5T5', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (3, 'PING Identity', 'PING Identity', 'www.google.ca', '3333 South st.', 'Halifax', 'NS', 'B3H 2Y5', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (4, 'Volta Lab', 'Volta Lab', 'www.volta.com', '4444 Leeds st.', 'Halifax', 'NS', 'B3K 2T3', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (5, 'STI', 'STI', 'www.sti.com', '5555 Main Street', 'Darmouth', 'NS', 'B3E 4B6', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (6, 'NS Power', 'Nova Scotia Power', 'www.nspower.com', '6666 First Street', 'Dartmouth', 'NS', 'B5T 6Y7', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (7, 'Anderson Brown & Company', 'ABC', 'www.abc.com', '7777 Second Street', 'Dartmouth', 'NS', 'B5T 6Y8', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (8, 'All Points Propert Services', 'All Points Property Services', 'www.apps.com', '8888 Points Avenue', 'Halifax', 'NS', 'B5T 6Y9', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (9, 'Aliant Mobility', 'Aliant Mobility', 'www.aliantmobility.com', '1883 Market Street', 'Halifax', 'NS', 'B5T 6Y10', NULL, NULL);
+INSERT INTO `qovlwqkk_itworks`.`company` (`company_id`, `name`, `description`, `website`, `address`, `city`, `province`, `postal_code`, `last_modified_by`, `last_modified_date`) VALUES (10, 'Aardvark Computer Solutions Inc.', 'Aardvark Computer Solutions Inc.', 'www.aacsi.com', '2070 Oxford Street Suite 100', 'Halifax', 'NS', 'B5T 6Y11', NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`user`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (1, 'bob.jim@google.com', 'qwertysalt', 'Bob', 'Jim', '9020000000', '2015-05-15', '2014-04-14', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (2, 'bob.jeff@google.com', 'qwertysalt', 'Bob', 'Jeff', '9021111111', '2015-05-15', '2014-04-14', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (3, 'jon.joe@google.com', 'qwertysalt', 'Jon', 'Joe', '9022222222', '2015-05-17', '2014-04-14', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (4, 'luke.skywalker@google.com', 'qwertysalt', 'Luke', 'Skywalker', '9023333333', '2015-05-18', '2014-04-15', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (5, 'randal.dude@google.com', 'qwertysalt', 'Randal', 'Dude', '9024444444', '2015-05-14', '2014-04-16', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (6, 'randy.bobandy@google.com', 'qwertysalt', 'Randy', 'Bobandy', '9025555555', '2015-05-20', '2014-04-19', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (7, 'philidalphia.collins@google.com', 'qwertysalt', 'Phillidalphia', 'Collins', '9026666666', '2015-05-21', '2014-04-20', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (8, 'corey.trevor@google.com', 'qwertysalt', 'Cory', 'Trevor', '9027777777', '2015-05-22', '2014-04-21', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (9, 'jack.jacobs@google.com', 'qwertysalt', 'Jack', 'Jacobs', '9028888888', '2015-05-26', '2014-04-22', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (10, 'rey.reynolds@google.com', 'qwertysalt', 'Rey', 'Reynolds', '9024568795', '2015-05-24', '2014-04-23', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (11, 'aaron.brooks@google.com', 'qwertysalt', 'Aaron', 'Brooks', '9024789364', '2015-05-25', '2014-04-24', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (12, 'kobe.bryant@google.com', 'qwertysalt', 'Kobe', 'Bryant', '9024563214', '2015-05-12', '2014-04-24', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (13, 'vince.carter@google.com', 'qwertysalt', 'Vince', 'Carter', '9024573214', '2015-05-15', '2014-05-15', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (14, 'jordan.smith@google.com', 'qwertysalt', 'Jordan', 'Smith', '9021457893', '2015-05-15', '2014-05-16', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (15, 'jeremy.lin@google.com', 'qwertysalt', 'Jeremy', 'Lin', '9020457478', '2015-05-15', '2014-05-17', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (16, 'SantinaPelley@google.com', 'qwertysalt', 'Santina', 'Pelley', '9020457479', '2015-05-16', '2014-05-18', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (17, 'FranceHumes@google.com', 'qwertysalt', 'France', 'Humes', '9020457480', '2015-05-17', '2014-05-19', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (18, 'ThiWetherby@google.com', 'qwertysalt', 'Thi', 'Wetherby', '9020457481', '2015-05-18', '2014-05-20', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (19, 'FidelVancleve@google.com', 'qwertysalt', 'Fidel', 'Vancleve', '9020457482', '2015-05-19', '2014-05-21', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (20, 'CruzFogleman@google.com', 'qwertysalt', 'Cruz', 'Fogleman', '9020457483', '2015-05-20', '2014-05-22', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (21, 'JeannaGarden@google.com', 'qwertysalt', 'Jeanna', 'Garden', '9020457484', '2015-05-21', '2014-05-23', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (22, 'PearlyKridler@google.com', 'qwertysalt', 'Pearly', 'Kridler', '9020457485', '2015-05-22', '2014-05-24', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (23, 'AlyssaJimenez@google.com', 'qwertysalt', 'Alyssa', 'Jimenez', '9020457486', '2015-05-23', '2014-05-25', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (24, 'MireyaMeyer@google.com', 'qwertysalt', 'Mireya', 'Meyer', '9020457487', '2015-05-24', '2014-05-26', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (25, 'MatildeArcher@google.com', 'qwertysalt', 'Matilde', 'Archer', '9020457488', '2015-05-25', '2014-05-27', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (26, 'MariannHendrix@google.com', 'qwertysalt', 'Mariann', 'Hendrix', '9020457489', '2015-05-26', '2014-05-28', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (27, 'LoraineGlenn@google.com', 'qwertysalt', 'Loraine', 'Glenn', '9020457490', '2015-05-27', '2014-05-29', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (28, 'ErichSuarez@google.com', 'qwertysalt', 'Erich', 'Suarez', '9020457491', '2015-05-28', '2014-05-30', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (29, 'TomiKemp@google.com', 'qwertysalt', 'Tomi', 'Kemp', '9020457492', '2015-05-29', '2014-05-31', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (30, 'VenettaBruce@google.com', 'qwertysalt', 'Venetta', 'Bruce', '9020457493', '2015-05-30', '2014-06-01', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (31, 'AudreaFitzpatrick@google.com', 'qwertysalt', 'Audrea', 'Fitzpatrick', '9020457494', '2015-05-31', '2014-06-02', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (32, 'LeenaHanna@google.com', 'qwertysalt', 'Leena', 'Hanna', '9020457495', '2015-06-01', '2014-06-03', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (33, 'DominqueCalderon@google.com', 'qwertysalt', 'Dominque', 'Calderon', '9020457496', '2015-06-02', '2014-06-04', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (34, 'IgnacioMooney@google.com', 'qwertysalt', 'Ignacio', 'Mooney', '9020457497', '2015-06-03', '2014-06-05', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (35, 'LeiaRios@google.com', 'qwertysalt', 'Leia', 'Rios', '9020457498', '2015-06-04', '2014-06-06', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (36, 'NonaMcfarland@google.com', 'qwertysalt', 'Nona', 'Mcfarland', '9020457499', '2015-06-05', '2014-06-07', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (37, 'ChayaHolmes@google.com', 'qwertysalt', 'Chaya', 'Holmes', '9020457500', '2015-06-06', '2014-06-08', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (38, 'ReenaBurke@google.com', 'qwertysalt', 'Reena', 'Burke', '9020457501', '2015-06-07', '2014-06-09', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (39, 'RoselineLivingston@google.com', 'qwertysalt', 'Roseline', 'Livingston', '9020457502', '2015-06-08', '2014-06-10', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (40, 'KeniaPeck@google.com', 'qwertysalt', 'Kenia', 'Peck', '9020457503', '2015-06-09', '2014-06-11', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (41, 'BernaDavidson@google.com', 'qwertysalt', 'Berna', 'Davidson', '9020457504', '2015-06-10', '2014-06-12', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (42, 'DainaBowen@google.com', 'qwertysalt', 'Daina', 'Bowen', '9020457505', '2015-06-11', '2014-06-13', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (43, 'StephaneSimon@google.com', 'qwertysalt', 'Stephane', 'Simon', '9020457506', '2015-06-12', '2014-06-14', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (44, 'JohnsieObrien@google.com', 'qwertysalt', 'Johnsie', 'Obrien', '9020457507', '2015-06-13', '2014-06-15', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (45, 'TomasaRich@google.com', 'qwertysalt', 'Tomasa', 'Rich', '9020457508', '2015-06-14', '2014-06-16', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (46, 'LarisaSavage@google.com', 'qwertysalt', 'Larisa', 'Savage', '9020457509', '2015-06-15', '2014-06-17', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (47, 'VadaMorales@google.com', 'qwertysalt', 'Vada', 'Morales', '9020457510', '2015-06-16', '2014-06-18', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (48, 'KayleneVaughn@google.com', 'qwertysalt', 'Kaylene', 'Vaughn', '9020457511', '2015-06-17', '2014-06-19', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (49, 'LoreeDavid@google.com', 'qwertysalt', 'Loree', 'David', '9020457512', '2015-06-18', '2014-06-20', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (50, 'PerlaFitzgerald@google.com', 'qwertysalt', 'Perla', 'Fitzgerald', '9020457513', '2015-06-19', '2014-06-21', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (51, 'DemetriaOwens@google.com', 'qwertysalt', 'Demetria', 'Owens', '9020457514', '2015-06-20', '2014-06-22', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+INSERT INTO `qovlwqkk_itworks`.`user` (`user_id`, `email`, `hashed_password`, `first_name`, `last_name`, `phone_number`, `last_signed_on`, `created_date`, `profile_text`, `reset`) VALUES (52, 'SusannaLi@google.com', 'qwertysalt', 'Susanna', 'Li', '9020457515', '2015-06-21', '2014-06-23', 'I am a first year student in the App Dev stream at NSCC.....', 'TEST');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`company_contact`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (1, 1, 0, 'Contract Recruiter', 41, 'Berna', '9020457503');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (2, 2, 1, 'Coordinator, Administrative Services', 42, 'Daina', '9020457504');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (3, 3, 1, 'Contract Recruiter', 43, 'Stephane', '9020457505');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (4, 4, 0, 'Coordinator, Administrative Services', 44, 'Johnsie', '9020457506');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (5, 5, 0, 'Contract Recruiter', 45, 'Tomasa', '9020457507');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (6, 6, 1, 'Coordinator, Administrative Services', 46, 'Larisa', '9020457508');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (7, 7, 0, 'Contract Recruiter', 47, 'Vada', '9020457509');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (8, 8, 0, 'Coordinator, Administrative Services', 48, 'Kaylene', '9020457510');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (9, 9, 1, 'Contract Recruiter', 49, 'Loree', '9020457511');
+INSERT INTO `qovlwqkk_itworks`.`company_contact` (`contact_id`, `company_id`, `email_confirmed`, `title`, `user_id`, `preferred_name`, `alt_phone`) VALUES (10, 10, 1, 'Coordinator, Administrative Services', 50, 'Perla', '9020457512');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`concentration`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (1, 'Database Administration');
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (2, 'Database Development');
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (3, 'Programming');
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (4, 'Systems Management/Networking');
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (5, 'Web Programming');
+INSERT INTO `qovlwqkk_itworks`.`concentration` (`concentration_id`, `description`) VALUES (6, 'Computer Electronics Technician');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`student_job_status`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (1, 'Looking for Work Experience');
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (2, 'Looking for Permanent Job');
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (3, 'Have Work Experience');
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (4, 'Have Permanent Job');
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (5, 'Not Looking');
+INSERT INTO `qovlwqkk_itworks`.`student_job_status` (`job_status_id`, `description`) VALUES (6, 'Other');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`student`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (1, 'w0216548', 'w0216548@nscc.ca', 1, 2015, 4, 4, 1, 'google.com', 'Bob', '9020000000');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (2, 'w0213549', 'w0213549@nscc.ca', 1, 2015, 2, 3, 2, 'google.com', 'Bob', '9021111111');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (3, 'w0248758', 'w0248758@nscc.ca', 0, 2015, 5, 6, 3, 'google.com', 'Jon', '9022222222');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (4, 'w0278954', 'w0278954@nscc.ca', 0, 2015, 2, 2, 4, 'google.com', 'Luke', '9023333333');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (5, 'w0275895', 'w0275895@nscc.ca', 1, 2015, 3, 6, 5, 'google.com', 'Randal', '9024444444');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (6, 'w0275896', 'w0275896@nscc.ca', 1, 2014, 5, 1, 6, 'google.com', 'Randy', '9025555555');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (7, 'w0275897', 'w0275897@nscc.ca', 1, 2015, 3, 2, 7, 'google.com', 'Phillidalphia', '9026666666');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (8, 'w0275898', 'w0275898@nscc.ca', 1, 2014, 4, 5, 8, 'google.com', 'Cory', '9027777777');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (9, 'w0275899', 'w0275899@nscc.ca', 0, 2015, 2, 5, 9, 'google.com', 'Jack', '9028888888');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (10, 'w0275900', 'w0275900@nscc.ca', 1, 2014, 1, 1, 10, 'google.com', 'Rey', '9024568795');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (11, 'w0275901', 'w0275901@nscc.ca', 0, 2015, 5, 5, 11, 'google.com', 'Aaron', '9024789364');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (12, 'w0275902', 'w0275902@nscc.ca', 0, 2015, 6, 5, 12, 'google.com', 'Kobe', '9024563214');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (13, 'w0275903', 'w0275903@nscc.ca', 0, 2014, 6, 2, 13, 'google.com', 'Vince', '9024573214');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (14, 'w0275904', 'w0275904@nscc.ca', 1, 2015, 4, 1, 14, 'google.com', 'Jordan', '9021457893');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (15, 'w0275905', 'w0275905@nscc.ca', 0, 2013, 4, 3, 15, 'google.com', 'Jeremy', '9020457478');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (16, 'w0275906', 'w0275906@nscc.ca', 1, 2015, 4, 2, 16, 'google.com', 'Santina', '9020457479');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (17, 'w0275907', 'w0275907@nscc.ca', 1, 2015, 3, 6, 17, 'google.com', 'France', '9020457480');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (18, 'w0275908', 'w0275908@nscc.ca', 1, 2015, 4, 1, 18, 'google.com', 'Thi', '9020457481');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (19, 'w0275909', 'w0275909@nscc.ca', 0, 2015, 4, 5, 19, 'google.com', 'Fidel', '9020457482');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (20, 'w0275910', 'w0275910@nscc.ca', 1, 2013, 6, 3, 20, 'google.com', 'Cruz', '9020457483');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (21, 'w0275911', 'w0275911@nscc.ca', 1, 2014, 6, 5, 21, 'google.com', 'Jeanna', '9020457484');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (22, 'w0275912', 'w0275912@nscc.ca', 1, 2015, 5, 3, 22, 'google.com', 'Pearly', '9020457485');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (23, 'w0275913', 'w0275913@nscc.ca', 1, 2015, 2, 1, 23, 'google.com', 'Alyssa', '9020457486');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (24, 'w0275914', 'w0275914@nscc.ca', 0, 2015, 3, 2, 24, 'google.com', 'Mireya', '9020457487');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (25, 'w0275915', 'w0275915@nscc.ca', 0, 2015, 2, 3, 25, 'google.com', 'Matilde', '9020457488');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (26, 'w0275916', 'w0275916@nscc.ca', 1, 2014, 5, 2, 26, 'google.com', 'Mariann', '9020457489');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (27, 'w0275917', 'w0275917@nscc.ca', 0, 2013, 1, 2, 27, 'google.com', 'Loraine', '9020457490');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (28, 'w0275918', 'w0275918@nscc.ca', 1, 2015, 5, 5, 28, 'google.com', 'Erich', '9020457491');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (29, 'w0275919', 'w0275919@nscc.ca', 1, 2015, 5, 2, 29, 'google.com', 'Tomi', '9020457492');
+INSERT INTO `qovlwqkk_itworks`.`student` (`student_id`, `w_number`, `school_email`, `email_confirmed`, `academic_year`, `concentration_id`, `job_status_id`, `user_id`, `website`, `preferred_name`, `alt_phone`) VALUES (30, 'w0275920', 'w0275920@nscc.ca', 1, 2015, 5, 6, 30, 'google.com', 'Venetta', '9020457493');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`job_post`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (1, 43, '2015-04-01 10:05:45', '2015-02-15', '2015-03-17', 'Senior web dev stuff for aa company called the leaning bar inc.', 43);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (2, NULL, NULL, '2015-02-16', '2015-06-18', 'We are looking for a C# programmer for our office in downtown Halifax. We are Pro Grammars inc.', 43);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (3, NULL, NULL, '2015-02-17', '2015-06-19', 'We desperately need a coffe maker so that we can do better at our jobs because we are lazy plz. Our company is called Sys Admin ltd.', 36);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (4, 39, '2015-03-25 11:04:10', '2015-02-18', '2015-03-20', 'We are looking for a PHP Developer', 39);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (5, 44, '2015-03-26 12:09:45', '2015-02-19', '2015-03-21', 'Senior web dev stuff for aa company called the leaning bar inc.', 44);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (6, 43, '2015-03-27 08:15:20', '2015-02-20', '2015-03-22', 'We are looking for a C# programmer for our office in downtown Halifax. We are Pro Grammars inc.', 43);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (7, 47, '2015-03-28 11:04:10', '2015-02-21', '2015-03-23', 'We desperately need a coffe maker so that we can do better at our jobs because we are lazy plz. Our company is called Sys Admin ltd.', 47);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (8, NULL, NULL, '2015-02-22', '2015-03-24', 'We are looking for a PHP Developer', 38);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (9, NULL, NULL, '2015-02-23', '2015-03-25', 'Senior web dev stuff for aa company called the leaning bar inc.', 36);
+INSERT INTO `qovlwqkk_itworks`.`job_post` (`jobpost_id`, `deleted_by`, `delete_date`, `posted_date`, `expiry_date`, `content`, `createdby`) VALUES (10, 45, '2015-03-15 09:10:58', '2015-02-24', '2015-03-26', 'We are looking for a C# programmer for our office in downtown Halifax. We are Pro Grammars inc.', 45);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`job`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (1, 'Senior Web Application Developer', '120 Carleton Street, Fredricton, NB E3B 3T4', 49, 1, 1, 'IBM', 1, 1);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (2, 'C# Programmer', '22 Young Avenue, Halifax, NS, B3Y 3D7', 48, 0, 0, 'NTT Data', 2, 2);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (3, 'Coffee Maker', '60 North Street, Halifax NS, N9K 3G5', 49, 1, 0, 'PING Identity', 3, 3);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (4, 'Jr. Java Developer', '10 Woodland Avenue, Dartmouth, NS, N5T 4T7', 43, 1, 1, 'Volta Lab', 4, 4);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (5, 'PHP Developer', '11 Spring Avenue, Dartmouth, NS, N5Z 4T7', 43, 1, 1, 'STI', 5, 5);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (6, 'Database Developer', '20 Brookfield Avenue, Dartmouth, NS, A7T 4T7', 44, 0, 0, 'NS Power', NULL, 6);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (7, 'IT Support Technician', '45 Willow Street, Halifax, NS, G5T 3D7', 41, 1, 0, 'Anderson Brown & Company', NULL, 7);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (8, 'Help Desk', '32 Main Street, Dartmouth, NS, N6Y 3T5', 48, 0, 1, 'All Points Propert Services', NULL, 8);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (9, 'IT Support Specialist', '15 Woodland Avenue, Dartmouth, NS, N5T 4T7', 46, 0, 1, 'Aliant Mobility', NULL, 9);
+INSERT INTO `qovlwqkk_itworks`.`job` (`job_id`, `title`, `location`, `createdby`, `emp_type`, `temporary`, `company_name`, `jobpost_id`, `company_id`) VALUES (10, 'IT Help Desk Technician', '14 Slayter Street, Halifax, NS, B5T 4T1', 48, 1, 0, 'Aardvark Computer Solutions Inc.', NULL, 10);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_coop_base`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (1, 1, 25, 3, 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (2, 0, 22, 8, 2);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (3, 0, 14, 8, 3);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (4, 1, 16, 1, 4);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (5, 0, 12, 10, 5);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (6, 1, 23, 1, 6);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (7, 1, 11, 1, 7);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (8, 0, 17, 9, 8);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (9, 0, 1, 5, 9);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_base` (`we_coop_id`, `is_coop`, `student_id`, `job_id`, `contact_id`) VALUES (10, 1, 29, 1, 10);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`coop_employer_start`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`coop_employer_start` (`we_coop_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `employer_signature`, `tasks`, `hazards`, `controls`, `we_coop_id`) VALUES (1, 'Contract Recruiter', '9025551238', '2015-03-15', '2015-04-14', '2015-03-12', 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', 1);
+INSERT INTO `qovlwqkk_itworks`.`coop_employer_start` (`we_coop_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `employer_signature`, `tasks`, `hazards`, `controls`, `we_coop_id`) VALUES (2, 'Coordinator, Administrative Services', '9025551239', '2015-03-16', '2015-04-15', '2015-03-13', 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', 4);
+INSERT INTO `qovlwqkk_itworks`.`coop_employer_start` (`we_coop_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `employer_signature`, `tasks`, `hazards`, `controls`, `we_coop_id`) VALUES (3, 'Contract Recruiter', '9025551240', '2015-03-17', '2015-04-16', '2015-03-14', 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', 6);
+INSERT INTO `qovlwqkk_itworks`.`coop_employer_start` (`we_coop_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `employer_signature`, `tasks`, `hazards`, `controls`, `we_coop_id`) VALUES (4, 'Coordinator, Administrative Services', '9025551241', '2015-03-18', '2015-04-17', '2015-03-15', 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', 7);
+INSERT INTO `qovlwqkk_itworks`.`coop_employer_start` (`we_coop_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `employer_signature`, `tasks`, `hazards`, `controls`, `we_coop_id`) VALUES (5, 'Contract Recruiter', '9025551242', '2015-03-19', '2015-04-18', '2015-03-16', 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', 10);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`coop_student_start`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`coop_student_start` (`we_coop_student_start_id`, `summer_address`, `summer_city`, `summer_postal_code`, `phone`, `emergency_contact_name`, `emergency_relationship`, `emergency_phone`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_job_performance`, `release_other`, `understanding_sign`, `we_coop_id`) VALUES (1, '1111 address st.', 'Halifax', 'B3H2Y2', '9027897777', 'Mom', 'Mother', '9027891111', 1, 1, 0, 1, 1, 0, '2015-03-12', 1);
+INSERT INTO `qovlwqkk_itworks`.`coop_student_start` (`we_coop_student_start_id`, `summer_address`, `summer_city`, `summer_postal_code`, `phone`, `emergency_contact_name`, `emergency_relationship`, `emergency_phone`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_job_performance`, `release_other`, `understanding_sign`, `we_coop_id`) VALUES (2, '2222 address st.', 'Halifax', 'B3H2Y3', '9021112222', 'Papa', 'Father', '9027892222', 1, 1, 1, 1, 1, 0, '2015-03-13', 4);
+INSERT INTO `qovlwqkk_itworks`.`coop_student_start` (`we_coop_student_start_id`, `summer_address`, `summer_city`, `summer_postal_code`, `phone`, `emergency_contact_name`, `emergency_relationship`, `emergency_phone`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_job_performance`, `release_other`, `understanding_sign`, `we_coop_id`) VALUES (3, '3333 address st.', 'Halifax', 'B3H2Y4', '9021113333', 'Grand Ma', 'Grand Mother', '9027893333', 1, 1, 0, 1, 1, 1, '2015-03-14', 6);
+INSERT INTO `qovlwqkk_itworks`.`coop_student_start` (`we_coop_student_start_id`, `summer_address`, `summer_city`, `summer_postal_code`, `phone`, `emergency_contact_name`, `emergency_relationship`, `emergency_phone`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_job_performance`, `release_other`, `understanding_sign`, `we_coop_id`) VALUES (4, '4444 address st.', 'Dartmouth', 'B3H2Y5', '9021114444', 'Grand Fa', 'Grand Father', '9027894444', 1, 1, 1, 1, 0, 1, '2015-03-15', 7);
+INSERT INTO `qovlwqkk_itworks`.`coop_student_start` (`we_coop_student_start_id`, `summer_address`, `summer_city`, `summer_postal_code`, `phone`, `emergency_contact_name`, `emergency_relationship`, `emergency_phone`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_job_performance`, `release_other`, `understanding_sign`, `we_coop_id`) VALUES (5, '5555 address st.', 'Dartmouth', 'B3H2Y6', '9021115555', 'Alvin', 'Friend', '9027895555', 1, 1, 1, 0, 0, 1, '2015-03-16', 10);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`faculty`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (1, 31);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (2, 32);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (3, 33);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (4, 34);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (5, 35);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (6, 36);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (7, 37);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (8, 38);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (9, 39);
+INSERT INTO `qovlwqkk_itworks`.`faculty` (`faculty_id`, `user_id`) VALUES (10, 40);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`tags`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (1, 'First', 'Database Administration');
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (2, 'Second', 'Database Development');
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (3, 'Third', 'Programming');
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (4, 'Fourth', 'Systems Management/Networking');
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (5, 'Fifth', 'Web Programming');
+INSERT INTO `qovlwqkk_itworks`.`tags` (`tag_id`, `description`, `name`) VALUES (6, 'Sixth', 'Computer Electronics Technician');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`job_tags`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (1, 2);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (2, 3);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (3, 3);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (4, 3);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (5, 6);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (6, 6);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (7, 1);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (8, 3);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (9, 4);
+INSERT INTO `qovlwqkk_itworks`.`job_tags` (`job_id`, `tag_id`) VALUES (10, 4);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`privileges_lookup`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (1, 'post_delete_edit_ownedJobs', 'Can post Jobs, edit,delete owned jobs');
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (2, 'edit_delete_all_jobs', 'Can Edit all  Jobs');
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (3, 'edit_all_profiles', 'Can Edit all user profiles');
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (4, 'document_sign_off', 'User can Sign off we or coop documents (Start and End)');
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (5, 'faculty_portal', 'Portal for reports and other things');
+INSERT INTO `qovlwqkk_itworks`.`privileges_lookup` (`plookup_id`, `privilege_name`, `privilege_description`) VALUES (6, 'admin_portal', 'Portal for all reports and other things');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`user_privileges`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (31, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (31, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (32, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (32, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (33, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (33, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (34, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (34, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (35, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (35, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (36, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (36, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (37, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (37, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (38, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (38, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (39, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (39, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (40, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (40, 5);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (41, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (42, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (43, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (44, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (45, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (46, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (47, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (48, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (49, 1);
+INSERT INTO `qovlwqkk_itworks`.`user_privileges` (`user_id`, `plookup_id`) VALUES (50, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_coop_employer_end`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (1, 3, 2, 0, 0, 2, 1, 2, 3, 2, 4, 1, 0, 3, 1, 1, 1, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-15 00:00:00', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (2, 1, 1, 1, 0, 1, 0, 3, 1, 2, 0, 1, 3, 2, 0, 0, 0, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-16 00:00:00', 2);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (3, 4, 2, 3, 0, 2, 1, 2, 3, 1, 1, 2, 4, 1, 1, 0, 2, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-17 00:00:00', 3);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (4, 4, 0, 1, 0, 0, 1, 2, 2, 3, 2, 1, 2, 3, 1, 0, 2, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-18 00:00:00', 4);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (5, 0, 2, 1, 2, 1, 0, 0, 1, 0, 4, 1, 0, 1, 1, 1, 0, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-19 00:00:00', 5);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (6, 0, 0, 2, 2, 0, 1, 3, 1, 3, 4, 2, 3, 3, 1, 1, 0, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-20 00:00:00', 6);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (7, 2, 3, 0, 0, 0, 2, 0, 1, 1, 0, 1, 3, 3, 1, 0, 4, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-21 00:00:00', 7);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (8, 3, 1, 1, 1, 0, 2, 4, 2, 0, 3, 3, 2, 0, 0, 1, 4, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-22 00:00:00', 8);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (9, 1, 0, 3, 0, 1, 0, 3, 3, 0, 3, 2, 2, 0, 0, 0, 1, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-23 00:00:00', 9);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_employer_end` (`we_coop_employer_end_id`, `interest_in_work`, `initiative`, `organization_planning`, `ability_to_learn`, `oral_communication`, `written_communication`, `quality_of_work`, `quantity_of_work`, `judgement`, `dependability`, `interpersonal_skills`, `response_to_supervision`, `rules_and_policies`, `attendance`, `punctuality`, `overall_performance`, `areas_of_strength`, `areas_to_improve`, `recommend_details`, `would_hire_again`, `sign_date`, `we_coop_id`) VALUES (10, 3, 0, 0, 2, 0, 1, 4, 2, 1, 3, 0, 4, 1, 0, 1, 0, 'The student had exceptional time management skills.......', 'The student lacked experience working with SQL.....', 'Yes', 'Yes', '2015-04-24 00:00:00', 10);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_coop_faculty_signoff`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (1, '2015-05-05 10:45:00', 1, 1, 7);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (2, '2015-05-06 10:45:00', 2, 1, 9);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (3, '2015-05-07 10:45:00', 3, 1, 5);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (4, '2015-05-08 10:45:00', 4, 0, 7);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (5, '2015-05-09 10:45:00', 5, 1, 9);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (6, '2015-05-10 10:45:00', 6, 0, 6);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (7, '2015-05-11 10:45:00', 7, 0, 2);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (8, '2015-05-12 10:45:00', 8, 0, 9);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (9, '2015-05-13 10:45:00', 9, 1, 2);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_faculty_signoff` (`we_faculty_signoff_id`, `faculty_signature`, `we_coop_id`, `stage`, `faculty_id`) VALUES (10, '2015-05-14 10:45:00', 10, 1, 5);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_coop_student_end`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (1, 3, 2, 2, 0, 4, 4, 3, 4, 1, 3, 2, 3, 2, 1, 1, 1, 'I found that this company was very .........', '2015-04-15', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (2, 1, 4, 2, 5, 0, 5, 1, 2, 4, 0, 2, 5, 0, 1, 2, 0, 'I found that this company was very .........', '2015-04-16', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (3, 4, 0, 4, 0, 0, 5, 5, 0, 0, 0, 4, 2, 1, 0, 2, 1, 'I found that this company was very .........', '2015-04-17', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (4, 0, 0, 4, 0, 5, 2, 2, 1, 5, 5, 0, 1, 1, 0, 1, 1, 'I found that this company was very .........', '2015-04-18', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (5, 3, 3, 5, 2, 3, 2, 3, 1, 5, 3, 2, 3, 2, 0, 1, 1, 'I found that this company was very .........', '2015-04-19', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (6, 4, 3, 3, 3, 5, 1, 5, 5, 1, 3, 0, 4, 1, 1, 0, 1, 'I found that this company was very .........', '2015-04-20', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (7, 1, 3, 0, 4, 1, 5, 0, 1, 3, 5, 2, 2, 1, 1, 0, 1, 'I found that this company was very .........', '2015-04-21', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (8, 0, 5, 3, 3, 0, 3, 0, 5, 2, 3, 1, 2, 1, 0, 3, 0, 'I found that this company was very .........', '2015-04-22', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (9, 2, 0, 1, 3, 2, 2, 3, 0, 3, 2, 2, 2, 0, 0, 2, 1, 'I found that this company was very .........', '2015-04-23', 1);
+INSERT INTO `qovlwqkk_itworks`.`we_coop_student_end` (`we_coop_student_end_id`, `relate_to_study`, `supervision_adequacy`, `supervisor_helpfulness`, `colleague_cooperativeness`, `use_training`, `develop_hr_skills`, `consistent_with_ability`, `develop_communication`, `develop_creativity`, `problem_solving`, `develop_critical_thinking`, `faculty_advisor_help`, `expectations`, `work_for_again`, `overall_evaluation`, `would_recommend`, `comments`, `sign_date`, `we_coop_id`) VALUES (10, 3, 3, 3, 2, 3, 5, 5, 0, 3, 2, 0, 4, 0, 1, 2, 0, 'I found that this company was very .........', '2015-04-24', 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_employer_start`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_employer_start` (`we_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `start_hour`, `end_hour`, `contact_frequency`, `tasks`, `hazards`, `controls`, `sign_date`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `personal_protective_equip`, `we_coop_id`) VALUES (1, 'Contract Recruiter', '9025551234', '2015-03-15 00:00:00', '2015-04-14 00:00:00', '09:00:00', '17:00:00', 1, 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', '2015-04-04 00:00:00', 1, '2015-04-04 00:00:00', '2015-04-04 00:00:00', 'Safety Equipment', 2);
+INSERT INTO `qovlwqkk_itworks`.`we_employer_start` (`we_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `start_hour`, `end_hour`, `contact_frequency`, `tasks`, `hazards`, `controls`, `sign_date`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `personal_protective_equip`, `we_coop_id`) VALUES (2, 'Coordinator, Administrative Services', '9025551235', '2015-03-16 00:00:00', '2015-04-15 00:00:00', '09:00:00', '17:00:00', 1, 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', '2015-04-05 00:00:00', 0, '2015-04-05 00:00:00', '2015-04-05 00:00:00', NULL, 3);
+INSERT INTO `qovlwqkk_itworks`.`we_employer_start` (`we_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `start_hour`, `end_hour`, `contact_frequency`, `tasks`, `hazards`, `controls`, `sign_date`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `personal_protective_equip`, `we_coop_id`) VALUES (3, 'Contract Recruiter', '9025551236', '2015-03-17 00:00:00', '2015-04-16 00:00:00', '09:00:00', '17:00:00', 1, 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', '2015-04-06 00:00:00', 0, '2015-04-06 00:00:00', '2015-04-06 00:00:00', NULL, 5);
+INSERT INTO `qovlwqkk_itworks`.`we_employer_start` (`we_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `start_hour`, `end_hour`, `contact_frequency`, `tasks`, `hazards`, `controls`, `sign_date`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `personal_protective_equip`, `we_coop_id`) VALUES (4, 'Coordinator, Administrative Services', '9025551237', '2015-03-18 00:00:00', '2015-04-17 00:00:00', '09:00:00', '17:00:00', 2, 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', '2015-04-07 00:00:00', 0, '2015-04-07 00:00:00', '2015-04-07 00:00:00', 'Safety Equipment', 8);
+INSERT INTO `qovlwqkk_itworks`.`we_employer_start` (`we_employer_start_id`, `contact_title`, `fax`, `start_date`, `end_date`, `start_hour`, `end_hour`, `contact_frequency`, `tasks`, `hazards`, `controls`, `sign_date`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `personal_protective_equip`, `we_coop_id`) VALUES (5, 'Contract Recruiter', '9025551238', '2015-03-19 00:00:00', '2015-04-18 00:00:00', '09:00:00', '17:00:00', 3, 'Work closely with the Business Development Team to create, revise and maintain technical documents related to the proposal', 'Working with electrical components', 'Proper lock-out/tag-out procedures in place', '2015-04-08 00:00:00', 1, '2015-04-08 00:00:00', '2015-04-08 00:00:00', NULL, 9);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`we_student_start`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`we_student_start` (`we_student_start_id`, `emergency_phone`, `student_signature_date`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_performance`, `release_other`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `we_coop_id`) VALUES (1, '9024568971', '2015-04-04 10:45:00', 0, 0, 0, 0, 0, 1, 1, '2015-06-04 10:45:00', '2015-04-04 10:45:00', 2);
+INSERT INTO `qovlwqkk_itworks`.`we_student_start` (`we_student_start_id`, `emergency_phone`, `student_signature_date`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_performance`, `release_other`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `we_coop_id`) VALUES (2, '9024568972', '2015-04-05 10:45:00', 1, 1, 1, 1, 0, 1, 0, '2015-06-04 10:45:00', '2015-04-04 10:45:00', 3);
+INSERT INTO `qovlwqkk_itworks`.`we_student_start` (`we_student_start_id`, `emergency_phone`, `student_signature_date`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_performance`, `release_other`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `we_coop_id`) VALUES (3, '9024568973', '2015-04-06 10:45:00', 0, 0, 0, 1, 1, 0, 0, '2015-06-04 10:45:00', '2015-04-04 10:45:00', 5);
+INSERT INTO `qovlwqkk_itworks`.`we_student_start` (`we_student_start_id`, `emergency_phone`, `student_signature_date`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_performance`, `release_other`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `we_coop_id`) VALUES (4, '9024568974', '2015-04-07 10:45:00', 0, 1, 0, 1, 1, 0, 0, '2015-06-04 10:45:00', '2015-04-04 10:45:00', 8);
+INSERT INTO `qovlwqkk_itworks`.`we_student_start` (`we_student_start_id`, `emergency_phone`, `student_signature_date`, `release_name`, `release_attendance`, `release_health_conditions`, `release_contact_info`, `release_performance`, `release_other`, `confidentiality`, `date_safety_reviewed`, `safety_signature`, `we_coop_id`) VALUES (5, '9024568975', '2015-04-08 10:45:00', 1, 0, 1, 0, 1, 1, 0, '2015-06-04 10:45:00', '2015-04-04 10:45:00', 9);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`skills`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (1, '.NET');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (2, '3D Software');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (3, 'Advisor');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (4, 'Agile');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (5, 'Android');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (6, 'AngularJS');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (7, 'Apache');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (8, 'Apple');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (9, 'Application');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (10, 'Application architect');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (11, 'Application Development');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (12, 'Applications Manager');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (13, 'Arduino');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (14, 'ASP');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (15, 'Assembly');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (16, 'Automation');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (17, 'Axure');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (18, 'Azure');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (19, 'Back end');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (20, 'Balsamiq');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (21, 'Bash');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (22, 'Bedford');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (23, 'BI');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (24, 'Big Data');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (25, 'Business Intelligence');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (26, 'C#');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (27, 'C++');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (28, 'Career');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (29, 'CET');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (30, 'Cloud');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (31, 'CMS');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (32, 'Command line');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (33, 'Communications');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (34, 'Consulting');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (35, 'Co-op');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (36, 'CSS');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (37, 'CSS3');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (38, 'Customer Support');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (39, 'Cybase');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (40, 'Cyber Security');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (41, 'Dartmouth');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (42, 'Data');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (43, 'Data Analysis');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (44, 'Database ');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (45, 'Database Administration');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (46, 'Database Administrator');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (47, 'DB');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (48, 'DBA');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (49, 'Developer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (50, 'Diagram');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (51, 'Documentation');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (52, 'Eclipse');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (53, 'Embedded Controller');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (54, 'ERD');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (55, 'ERP');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (56, 'Excel');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (57, 'Financial');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (58, 'first year');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (59, 'Front end');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (60, 'Full-time');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (61, 'Functional Programming');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (62, 'Game');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (63, 'Github');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (64, 'graduate');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (65, 'Graphic Designer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (66, 'GUI');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (67, 'Halifax');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (68, 'Hardware');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (69, 'Help Desk');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (70, 'HTML');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (71, 'HTML5');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (72, 'Human Resources');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (73, 'ICT');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (74, 'IIS');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (75, 'Illustrator');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (76, 'Information Technology');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (77, 'Infrastructure');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (78, 'Innovative');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (79, 'IOS');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (80, 'IT Support Consultant');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (81, 'J2EE');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (82, 'Java');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (83, 'Java Development');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (84, 'JavaScript');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (85, 'JBoss');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (86, 'JQuery');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (87, 'JSON');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (88, 'JSP');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (89, 'Junior Analyst');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (90, 'Junior Developer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (91, 'Leader');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (92, 'Linux');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (93, 'Mac');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (94, 'Macro');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (95, 'Management');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (96, 'Manager');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (97, 'Media');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (98, 'Military');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (99, 'Minimum Wage');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (100, 'Mobile');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (101, 'Mobile Game');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (102, 'Mobile Security');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (103, 'Mockup');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (104, 'MongoDB');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (105, 'MSSQL');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (106, 'Multi-Media');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (107, 'MVC');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (108, 'MySql');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (109, 'Network');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (110, 'Network administration');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (111, 'Network Architect');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (112, 'Node.js');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (113, 'Nova Scotia');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (114, 'Object Oriented Programming');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (115, 'Office Software');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (116, 'Open-source');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (117, 'Operating System');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (118, 'Oracle');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (119, 'Out of Country');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (120, 'Out of Province');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (121, 'Part-time');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (122, 'Penetration Testing');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (123, 'Perl');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (124, 'Permanent');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (125, 'Photoshop');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (126, 'PHP');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (127, 'PL/SQL');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (128, 'Proceedural Programming');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (129, 'Programming');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (130, 'Project');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (131, 'Project Manager');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (132, 'Python');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (133, 'QA Tester');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (134, 'Raspberry Pi');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (135, 'Repair');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (136, 'Ruby');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (137, 'Sackville');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (138, 'Scientific');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (139, 'Scrum');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (140, 'Scrum Master');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (141, 'Security');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (142, 'Security Analyst');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (143, 'Senior Analyst');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (144, 'Senior Developer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (145, 'Server');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (146, 'Simulation');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (147, 'Software Tester');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (148, 'SQL Server');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (149, 'Startup');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (150, 'Swift');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (151, 'Symbolic Programming');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (152, 'System administration');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (153, 'System Engineer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (154, 'Technical Support Analyst');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (155, 'Temporary');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (156, 'Testing');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (157, 'Training');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (158, 'Trouble shooting');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (159, 'UI');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (160, 'UML');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (161, 'Unix');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (162, 'UX');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (163, 'VB');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (164, 'Video Game');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (165, 'Virtual');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (166, 'Visual Basic');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (167, 'Visual studio');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (168, 'Waterfall');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (169, 'Web API Developer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (170, 'Web Application Development');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (171, 'Web Application Server');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (172, 'Web Designer');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (173, 'Web Host');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (174, 'Windows');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (175, 'Wireframe');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (176, 'Wireless');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (177, 'Work Experience');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (178, 'XCode');
+INSERT INTO `qovlwqkk_itworks`.`skills` (`skills_id`, `name`) VALUES (179, 'XML');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`student_skills`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (1, 82);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (2, 79);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (3, 111);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (4, 169);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (5, 65);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (6, 142);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (7, 28);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (8, 61);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (9, 63);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (10, 74);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (11, 40);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (12, 169);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (13, 166);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (14, 134);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (15, 54);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (16, 20);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (17, 169);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (18, 165);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (19, 39);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (20, 101);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (21, 178);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (22, 144);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (23, 62);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (24, 67);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (25, 35);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (26, 172);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (27, 148);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (28, 10);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (29, 97);
+INSERT INTO `qovlwqkk_itworks`.`student_skills` (`student_id`, `skill_id`) VALUES (30, 41);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `qovlwqkk_itworks`.`company_contact_information`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `qovlwqkk_itworks`;
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (1, 'Argus', 'Narkissos', '9024561254', 'Argus_Narkissos@nscc.ca', 7);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (2, 'Shiwei', 'Lim', '9024561255', 'Shiwei_Lim@nscc.ca', 8);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (3, 'Carlos', 'Boozer', '9024561256', 'Carlos_Boozer@nscc.ca', 1);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (4, 'Allen', 'Iverson', '9024561257', 'Allen_Iverson@nscc.ca', 7);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (5, 'Dave', 'Jordan', '9024561258', 'Dave_Jordan@nscc.ca', 9);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (6, 'Miranda', 'Garson', '9024561259', 'Miranda_Garson@nscc.ca', 10);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (7, 'Vanilla', 'Ice', '9024561260', 'Vanilla_Ice@nscc.ca', 9);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (8, 'Paul', 'Growel', '9024561261', 'Paul_Growel@nscc.ca', 7);
+INSERT INTO `qovlwqkk_itworks`.`company_contact_information` (`cci_id`, `contact_name`, `contact_title`, `contact_phone`, `contact_email`, `company_id`) VALUES (9, 'Stephen', 'Malone', '9024561262', 'Stephen_Malone@nscc.ca', 8);
+
+COMMIT;
+

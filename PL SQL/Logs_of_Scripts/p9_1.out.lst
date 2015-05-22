@@ -1,0 +1,35 @@
+
+Procedure created.
+
+
+    SALARY TITLE                          EMPLOYEEID                            
+---------- ------------------------------ ----------                            
+     35000 General Manager                         1                            
+     50000 Sales Manager                           2                            
+     35000 Sales Support Agent                     3                            
+     35000 Sales Support Agent                     4                            
+     35000 Sales Support Agent                     5                            
+     85000 IT Manager                              6                            
+     60000 IT Staff                                7                            
+     60000 IT Staff                                8                            
+
+8 rows selected.
+
+SP2-0042: unknown command "s" - rest of line ignored.
+
+PL/SQL procedure successfully completed.
+
+
+    SALARY TITLE                          EMPLOYEEID                            
+---------- ------------------------------ ----------                            
+     35000 General Manager                         1                            
+     50000 Sales Manager                           2                            
+     35000 Sales Support Agent                     3                            
+     35000 Sales Support Agent                     4                            
+     35000 Sales Support Agent                     5                            
+     85000 IT Manager                              6                            
+     65000 IT Staff                                7                            
+     65000 IT Staff                                8                            
+
+8 rows selected.
+

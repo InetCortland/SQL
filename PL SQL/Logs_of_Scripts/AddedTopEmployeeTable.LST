@@ -1,0 +1,11 @@
+SQL> Create Table TOP_EMPLOYEES ( NAME varchar2(25), Salary number (11,2));
+
+Table created.
+
+SQL> Describe TOP_Employees;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(25)
+ SALARY                                             NUMBER(11,2)
+
+SQL> spool off;

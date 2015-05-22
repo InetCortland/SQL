@@ -1,0 +1,26 @@
+SQL> Select Salary, LastName From Employee Order by salary desc;
+
+    SALARY LASTNAME                                                             
+---------- --------------------                                                 
+     85000 Mitchell                                                             
+     60000 King                                                                 
+     60000 Callahan                                                             
+     50000 Edwards                                                              
+     35000 Johnson                                                              
+     35000 Peacock                                                              
+     35000 Adams                                                                
+     35000 Park                                                                 
+
+8 rows selected.
+
+SQL> Select * from top_employees order by salary desc;
+
+NAME                          SALARY                                            
+------------------------- ----------                                            
+Mitchell                       85000                                            
+Callahan                       60000                                            
+King                           60000                                            
+Edwards                        50000                                            
+Johnson                        35000       
+
+SQL> spool off;

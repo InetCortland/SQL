@@ -1,0 +1,24 @@
+
+Table created.
+
+
+Table altered.
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                NOT NULL NUMBER
+ FIRSTNAME                                 NOT NULL VARCHAR2(40)
+ LASTNAME                                  NOT NULL VARCHAR2(20)
+ COMPANY                                            VARCHAR2(80)
+ ADDRESS                                            VARCHAR2(70)
+ CITY                                               VARCHAR2(40)
+ STATE                                              VARCHAR2(40)
+ COUNTRY                                            VARCHAR2(40)
+ POSTALCODE                                         VARCHAR2(10)
+ PHONE                                              VARCHAR2(24)
+ FAX                                                VARCHAR2(24)
+ EMAIL                                     NOT NULL VARCHAR2(60)
+ SUPPORTREPID                                       NUMBER
+ REWARDS                                            VARCHAR2(25)
+ AUDIT_DATE                                         DATE
+

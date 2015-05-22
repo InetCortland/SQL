@@ -1,0 +1,16 @@
+SQL> 	 Select EmployeeId,Title,Salary from Employee;
+
+EMPLOYEEID TITLE                              SALARY                            
+---------- ------------------------------ ----------                            
+         1 General Manager                     35000                            
+         2 Sales Manager                       50000                            
+         3 Sales Support Agent                 35000                            
+         4 Sales Support Agent                 35000                            
+         5 Sales Support Agent                 35000                            
+         6 IT Manager                          85000                            
+         7 IT Staff                            60000                            
+         8 IT Staff                            60000                            
+
+8 rows selected.
+
+SQL> spool off;

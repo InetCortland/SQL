@@ -1,0 +1,6 @@
+Please enter new Genre Name: NewBestPOPGenre
+old   3:      v_thegenre varchar2(225) := '&input_genre';
+new   3:      v_thegenre varchar2(225) := 'NewBestPOPGenre';
+
+PL/SQL procedure successfully completed.
+

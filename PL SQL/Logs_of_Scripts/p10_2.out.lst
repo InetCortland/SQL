@@ -1,0 +1,71 @@
+
+Trigger created.
+
+
+1 row created.
+
+
+CUSTOMERID FIRSTNAME            ADDRESS                                         
+---------- -------------------- --------------------                            
+########## George               500 Main                                        
+
+
+FIRSTNAME            ADDRESS              CITY                                  
+-------------------- -------------------- --------------------                  
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               EPIC NEW ADDRESS     CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               EPIC NEW ADDRESSz    CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               EPIC NEW ADDRESSz    CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+
+FIRSTNAME            ADDRESS              CITY                                  
+-------------------- -------------------- --------------------                  
+George               EPIC NEW ADDRESSz    CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               EPIC NEW ADDRESSz    CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               EPIC NEW ADDRESSz    CANDY LAND CITY                       
+George               433 WillowTree       Dartmouth                             
+George               433 WillowTree       Dartmouth                             
+George               NewAddress           NewYork                               
+George               500 Main             Dartmouth                             
+
+22 rows selected.
+
+
+1 row updated.
+
+
+CUSTOMERID FIRSTNAME            ADDRESS              CITY                       
+---------- -------------------- -------------------- --------------------       
+########## George               Newadd               NewYork                    
+
+
+FIRSTNAME            ADDRESS                                                    
+-------------------- --------------------                                       
+George               500 Main                                                   
+George               500 Main                                                   
+
+
+1 row deleted.
+
+
+CUSTOMERID FIRSTNAME            ADDRESS                                         
+---------- -------------------- --------------------                            
+########## Luís                Av. Brigadeiro Faria                            
+                                 Lima, 2170                                     
+                                                                                
+
+
+FIRSTNAME            ADDRESS                                                    
+-------------------- --------------------                                       
+George               Newadd                                                     
+

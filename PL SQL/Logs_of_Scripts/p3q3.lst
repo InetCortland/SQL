@@ -1,0 +1,13 @@
+Please enter new Media Type: MPEG-25
+old   3:      v_newMediaName varchar2(225) := '&input_media';
+new   3:      v_newMediaName varchar2(225) := 'MPEG-25';
+--------------------------------
+
+Input Result
+Purchased AAC audio              
+file
+
+--------------------------------                                          
+
+PL/SQL procedure successfully completed.
+

@@ -1,0 +1,23 @@
+
+Function created.
+
+Please enter a String: sdfsdf3
+old   9: 	v_unformattedstr := '&input_string'; -- we take the input string and assign to var
+new   9: 	v_unformattedstr := 'sdfsdf3'; -- we take the input string and assign to var
+Input Strings Last Char is a number                                             
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+Function created.
+
+Please enter a String: asdasd
+old   9: 	v_unformattedstr := '&input_string'; -- we take the input string and assign to var
+new   9: 	v_unformattedstr := 'asdasd'; -- we take the input string and assign to var
+Input Strings Last Char is a Letter                                             
+
+PL/SQL procedure successfully completed.
+

@@ -1,0 +1,12 @@
+SQL> CREATE TABLE MESSAGE_LOGS(MESSAGE_DATE Date,SCRIPT_NAME varchar2(25),MESSAGE_RESULT varchar2(100));
+
+Table created.
+
+SQL> Describe Message_Logs;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MESSAGE_DATE                                       DATE
+ SCRIPT_NAME                                        VARCHAR2(25)
+ MESSAGE_RESULT                                     VARCHAR2(100)
+
+SQL> spool off;

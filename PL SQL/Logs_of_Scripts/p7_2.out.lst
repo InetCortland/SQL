@@ -1,0 +1,37 @@
+Please enter Salary Amt: 35000
+old   5:     v_salary Chinook.Employee.Salary%TYPE := &input_sal;
+new   5:     v_salary Chinook.Employee.Salary%TYPE := 35000;
+
+----Error__Exception------                                                     
+
+--------------------------------                                               
+Your SELECT statement retrieved multiplerows. Consider using a cursor.          
+
+PL/SQL procedure successfully completed.
+
+
+MESSAGE_D SCRIPT_NAME                                                           
+--------- -------------------------                                             
+MESSAGE_RESULT                                                                  
+--------------------------------------------------------------------------------
+25-FEB-15 p7_2.sql                                                              
+Some other error occurred                                                       
+                                                                                
+25-FEB-15 p7_2.sql                                                              
+One row returned  Mitchell   85000                                              
+                                                                                
+25-FEB-15 p7_2.sql                                                              
+More than one employee with a salary of 35000                                   
+                                                                                
+
+MESSAGE_D SCRIPT_NAME                                                           
+--------- -------------------------                                             
+MESSAGE_RESULT                                                                  
+--------------------------------------------------------------------------------
+25-FEB-15 p7_2.sql                                                              
+No employee with a salary of 44555454                                           
+                                                                                
+25-FEB-15 p7_2.sql                                                              
+More than one employee with a salary of 35000                                   
+                                                                                
+
