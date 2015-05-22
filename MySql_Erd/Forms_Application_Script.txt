@@ -1,0 +1,819 @@
+
+-- --------------------------------------------------
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
+-- --------------------------------------------------
+-- Date Created: 05/21/2015 14:47:28
+-- Generated from EDMX file: C:\NsccApplication\SchoolApplicationModel\NsccModel.edmx
+-- --------------------------------------------------
+
+SET QUOTED_IDENTIFIER OFF;
+GO
+USE [NsccDB];
+GO
+IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
+GO
+
+-- --------------------------------------------------
+-- Dropping existing FOREIGN KEY constraints
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[FK_ApplicantApplication]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Applications] DROP CONSTRAINT [FK_ApplicantApplication];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ApplicationAcademicYear_AcademicYear]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ApplicationAcademicYear] DROP CONSTRAINT [FK_ApplicationAcademicYear_AcademicYear];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ApplicationAcademicYear_Application]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ApplicationAcademicYear] DROP CONSTRAINT [FK_ApplicationAcademicYear_Application];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ApplicationProgramChoice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ProgramChoices] DROP CONSTRAINT [FK_ApplicationProgramChoice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampusProgram_Campus]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CampusProgram] DROP CONSTRAINT [FK_CampusProgram_Campus];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampusProgram_Program]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CampusProgram] DROP CONSTRAINT [FK_CampusProgram_Program];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampusProgramChoice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ProgramChoices] DROP CONSTRAINT [FK_CampusProgramChoice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CitizenshipApplicant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Applicants] DROP CONSTRAINT [FK_CitizenshipApplicant];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CountryApplicant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Applicants] DROP CONSTRAINT [FK_CountryApplicant];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CountryApplicant1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Applicants] DROP CONSTRAINT [FK_CountryApplicant1];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CountryProvinceState]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ProvinceStates] DROP CONSTRAINT [FK_CountryProvinceState];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProgramProgramChoice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ProgramChoices] DROP CONSTRAINT [FK_ProgramProgramChoice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProvinceStateApplicant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Applicants] DROP CONSTRAINT [FK_ProvinceStateApplicant];
+GO
+
+-- --------------------------------------------------
+-- Dropping existing tables
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[AcademicYears]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[AcademicYears];
+GO
+IF OBJECT_ID(N'[dbo].[Applicants]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Applicants];
+GO
+IF OBJECT_ID(N'[dbo].[ApplicationAcademicYear]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ApplicationAcademicYear];
+GO
+IF OBJECT_ID(N'[dbo].[Applications]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Applications];
+GO
+IF OBJECT_ID(N'[dbo].[Campus]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Campus];
+GO
+IF OBJECT_ID(N'[dbo].[CampusProgram]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CampusProgram];
+GO
+IF OBJECT_ID(N'[dbo].[Citizenships]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Citizenships];
+GO
+IF OBJECT_ID(N'[dbo].[Countries]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Countries];
+GO
+IF OBJECT_ID(N'[dbo].[ProgramChoices]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ProgramChoices];
+GO
+IF OBJECT_ID(N'[dbo].[Programs]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Programs];
+GO
+IF OBJECT_ID(N'[dbo].[ProvinceStates]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ProvinceStates];
+GO
+
+-- --------------------------------------------------
+-- Creating all tables
+-- --------------------------------------------------
+
+-- Creating table 'AcademicYears'
+CREATE TABLE [dbo].[AcademicYears] (
+    [AcademicYearId] int IDENTITY(1,1) NOT NULL,
+    [Description] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Applicants'
+CREATE TABLE [dbo].[Applicants] (
+    [ApplicantId] int IDENTITY(1,1) NOT NULL,
+    [SIN] nchar(10)  NULL,
+    [Prefix] nvarchar(10)  NULL,
+    [FirstName] nvarchar(50)  NOT NULL,
+    [MiddleName] nvarchar(50)  NOT NULL,
+    [FirstNamePreferred] nvarchar(50)  NULL,
+    [LastNamePrevious] nvarchar(50)  NULL,
+    [DOB] datetime  NOT NULL,
+    [Gender] nchar(1)  NOT NULL,
+    [StreetAddress1] nvarchar(50)  NOT NULL,
+    [StreetAddress2] nvarchar(50)  NULL,
+    [City] nvarchar(50)  NOT NULL,
+    [Country] nvarchar(50)  NULL,
+    [ProvinceStateOther] nvarchar(50)  NULL,
+    [PhoneHome] nvarchar(25)  NOT NULL,
+    [PhoneWork] nvarchar(25)  NULL,
+    [PhoneCell] nvarchar(25)  NULL,
+    [Email] nvarchar(50)  NOT NULL,
+    [HasCriminalConviction] varbinary(max)  NULL,
+    [OnChildAbuseRegistry] varbinary(max)  NULL,
+    [HasDisciplinaryAction] varbinary(max)  NULL,
+    [IsAfricanCanadian] varbinary(max)  NULL,
+    [IsFirstNations] varbinary(max)  NULL,
+    [IsCurrentALP] varbinary(max)  NULL,
+    [HasDisability] varbinary(max)  NULL,
+    [Password] nvarchar(50)  NOT NULL,
+    [Citizenship] int  NOT NULL,
+    [ProvinceStateCode] nchar(2)  NULL,
+    [CountryCode] nchar(2)  NOT NULL,
+    [CitizenshipOther] nchar(2)  NULL
+);
+GO
+
+-- Creating table 'Applications'
+CREATE TABLE [dbo].[Applications] (
+    [ApplicationId] int IDENTITY(1,1) NOT NULL,
+    [ApplicationFee] int  NULL,
+    [Paid] varbinary(max)  NOT NULL,
+    [ApplicationDate] datetime  NOT NULL,
+    [ApplicantId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Campus1'
+CREATE TABLE [dbo].[Campus1] (
+    [CampusId] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Citizenships'
+CREATE TABLE [dbo].[Citizenships] (
+    [CitizenshipId] int IDENTITY(1,1) NOT NULL,
+    [Description] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Countries'
+CREATE TABLE [dbo].[Countries] (
+    [CountryCode] nchar(2)  NOT NULL,
+    [CountryName] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'ProgramChoices'
+CREATE TABLE [dbo].[ProgramChoices] (
+    [ProgramChoiceId] int IDENTITY(1,1) NOT NULL,
+    [Preference] int  NOT NULL,
+    [CampusId] int  NOT NULL,
+    [ProgramId] int  NOT NULL,
+    [ApplicationId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Programs'
+CREATE TABLE [dbo].[Programs] (
+    [ProgramId] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'ProvinceStates'
+CREATE TABLE [dbo].[ProvinceStates] (
+    [ProvinceStateCode] nchar(2)  NOT NULL,
+    [Name] nvarchar(50)  NOT NULL,
+    [CountryCode] nchar(2)  NOT NULL
+);
+GO
+
+-- Creating table 'AcademicYear1'
+CREATE TABLE [dbo].[AcademicYear1] (
+    [AcademicYearId] int IDENTITY(1,1) NOT NULL,
+    [Description] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Applicant1'
+CREATE TABLE [dbo].[Applicant1] (
+    [ApplicantId] int IDENTITY(1,1) NOT NULL,
+    [SIN] nchar(10)  NULL,
+    [Prefix] nvarchar(10)  NULL,
+    [FirstName] nvarchar(50)  NOT NULL,
+    [MiddleName] nvarchar(50)  NOT NULL,
+    [FirstNamePreferred] nvarchar(50)  NULL,
+    [LastNamePrevious] nvarchar(50)  NULL,
+    [DOB] datetime  NOT NULL,
+    [Gender] nchar(1)  NOT NULL,
+    [StreetAddress1] nvarchar(50)  NOT NULL,
+    [StreetAddress2] nvarchar(50)  NULL,
+    [City] nvarchar(50)  NOT NULL,
+    [Country] nvarchar(50)  NULL,
+    [ProvinceStateOther] nvarchar(50)  NULL,
+    [PhoneHome] nvarchar(25)  NOT NULL,
+    [PhoneWork] nvarchar(25)  NULL,
+    [PhoneCell] nvarchar(25)  NULL,
+    [Email] nvarchar(50)  NOT NULL,
+    [HasCriminalConviction] varbinary(max)  NULL,
+    [OnChildAbuseRegistry] varbinary(max)  NULL,
+    [HasDisciplinaryAction] varbinary(max)  NULL,
+    [IsAfricanCanadian] varbinary(max)  NULL,
+    [IsFirstNations] varbinary(max)  NULL,
+    [IsCurrentALP] varbinary(max)  NULL,
+    [HasDisability] varbinary(max)  NULL,
+    [Password] nvarchar(50)  NOT NULL,
+    [Citizenship] int  NOT NULL,
+    [ProvinceStateCode] nchar(2)  NULL,
+    [CountryCode] nchar(2)  NOT NULL,
+    [CitizenshipOther] nchar(2)  NULL
+);
+GO
+
+-- Creating table 'Application1'
+CREATE TABLE [dbo].[Application1] (
+    [ApplicationId] int IDENTITY(1,1) NOT NULL,
+    [ApplicationFee] int  NULL,
+    [Paid] varbinary(max)  NOT NULL,
+    [ApplicationDate] datetime  NOT NULL,
+    [ApplicantId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Campus11'
+CREATE TABLE [dbo].[Campus11] (
+    [CampusId] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Citizenship1'
+CREATE TABLE [dbo].[Citizenship1] (
+    [CitizenshipId] int IDENTITY(1,1) NOT NULL,
+    [Description] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Country1'
+CREATE TABLE [dbo].[Country1] (
+    [CountryCode] nchar(2)  NOT NULL,
+    [CountryName] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'ProgramChoice1'
+CREATE TABLE [dbo].[ProgramChoice1] (
+    [ProgramChoiceId] int IDENTITY(1,1) NOT NULL,
+    [Preference] int  NOT NULL,
+    [CampusId] int  NOT NULL,
+    [ProgramId] int  NOT NULL,
+    [ApplicationId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Program1'
+CREATE TABLE [dbo].[Program1] (
+    [ProgramId] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'ProvinceState1'
+CREATE TABLE [dbo].[ProvinceState1] (
+    [ProvinceStateCode] nchar(2)  NOT NULL,
+    [Name] nvarchar(50)  NOT NULL,
+    [CountryCode] nchar(2)  NOT NULL
+);
+GO
+
+-- Creating table 'ApplicationAcademicYear'
+CREATE TABLE [dbo].[ApplicationAcademicYear] (
+    [AcademicYears_AcademicYearId] int  NOT NULL,
+    [Applications_ApplicationId] int  NOT NULL
+);
+GO
+
+-- Creating table 'CampusProgram'
+CREATE TABLE [dbo].[CampusProgram] (
+    [Campus_CampusId] int  NOT NULL,
+    [Programs_ProgramId] int  NOT NULL
+);
+GO
+
+-- Creating table 'ApplicationAcademicYear1'
+CREATE TABLE [dbo].[ApplicationAcademicYear1] (
+    [AcademicYears_AcademicYearId] int  NOT NULL,
+    [Applications_ApplicationId] int  NOT NULL
+);
+GO
+
+-- Creating table 'CampusProgram1'
+CREATE TABLE [dbo].[CampusProgram1] (
+    [Campus_CampusId] int  NOT NULL,
+    [Programs_ProgramId] int  NOT NULL
+);
+GO
+
+-- --------------------------------------------------
+-- Creating all PRIMARY KEY constraints
+-- --------------------------------------------------
+
+-- Creating primary key on [AcademicYearId] in table 'AcademicYears'
+ALTER TABLE [dbo].[AcademicYears]
+ADD CONSTRAINT [PK_AcademicYears]
+    PRIMARY KEY CLUSTERED ([AcademicYearId] ASC);
+GO
+
+-- Creating primary key on [ApplicantId] in table 'Applicants'
+ALTER TABLE [dbo].[Applicants]
+ADD CONSTRAINT [PK_Applicants]
+    PRIMARY KEY CLUSTERED ([ApplicantId] ASC);
+GO
+
+-- Creating primary key on [ApplicationId] in table 'Applications'
+ALTER TABLE [dbo].[Applications]
+ADD CONSTRAINT [PK_Applications]
+    PRIMARY KEY CLUSTERED ([ApplicationId] ASC);
+GO
+
+-- Creating primary key on [CampusId] in table 'Campus1'
+ALTER TABLE [dbo].[Campus1]
+ADD CONSTRAINT [PK_Campus1]
+    PRIMARY KEY CLUSTERED ([CampusId] ASC);
+GO
+
+-- Creating primary key on [CitizenshipId] in table 'Citizenships'
+ALTER TABLE [dbo].[Citizenships]
+ADD CONSTRAINT [PK_Citizenships]
+    PRIMARY KEY CLUSTERED ([CitizenshipId] ASC);
+GO
+
+-- Creating primary key on [CountryCode] in table 'Countries'
+ALTER TABLE [dbo].[Countries]
+ADD CONSTRAINT [PK_Countries]
+    PRIMARY KEY CLUSTERED ([CountryCode] ASC);
+GO
+
+-- Creating primary key on [ProgramChoiceId] in table 'ProgramChoices'
+ALTER TABLE [dbo].[ProgramChoices]
+ADD CONSTRAINT [PK_ProgramChoices]
+    PRIMARY KEY CLUSTERED ([ProgramChoiceId] ASC);
+GO
+
+-- Creating primary key on [ProgramId] in table 'Programs'
+ALTER TABLE [dbo].[Programs]
+ADD CONSTRAINT [PK_Programs]
+    PRIMARY KEY CLUSTERED ([ProgramId] ASC);
+GO
+
+-- Creating primary key on [ProvinceStateCode], [CountryCode] in table 'ProvinceStates'
+ALTER TABLE [dbo].[ProvinceStates]
+ADD CONSTRAINT [PK_ProvinceStates]
+    PRIMARY KEY CLUSTERED ([ProvinceStateCode], [CountryCode] ASC);
+GO
+
+-- Creating primary key on [AcademicYearId] in table 'AcademicYear1'
+ALTER TABLE [dbo].[AcademicYear1]
+ADD CONSTRAINT [PK_AcademicYear1]
+    PRIMARY KEY CLUSTERED ([AcademicYearId] ASC);
+GO
+
+-- Creating primary key on [ApplicantId] in table 'Applicant1'
+ALTER TABLE [dbo].[Applicant1]
+ADD CONSTRAINT [PK_Applicant1]
+    PRIMARY KEY CLUSTERED ([ApplicantId] ASC);
+GO
+
+-- Creating primary key on [ApplicationId] in table 'Application1'
+ALTER TABLE [dbo].[Application1]
+ADD CONSTRAINT [PK_Application1]
+    PRIMARY KEY CLUSTERED ([ApplicationId] ASC);
+GO
+
+-- Creating primary key on [CampusId] in table 'Campus11'
+ALTER TABLE [dbo].[Campus11]
+ADD CONSTRAINT [PK_Campus11]
+    PRIMARY KEY CLUSTERED ([CampusId] ASC);
+GO
+
+-- Creating primary key on [CitizenshipId] in table 'Citizenship1'
+ALTER TABLE [dbo].[Citizenship1]
+ADD CONSTRAINT [PK_Citizenship1]
+    PRIMARY KEY CLUSTERED ([CitizenshipId] ASC);
+GO
+
+-- Creating primary key on [CountryCode] in table 'Country1'
+ALTER TABLE [dbo].[Country1]
+ADD CONSTRAINT [PK_Country1]
+    PRIMARY KEY CLUSTERED ([CountryCode] ASC);
+GO
+
+-- Creating primary key on [ProgramChoiceId] in table 'ProgramChoice1'
+ALTER TABLE [dbo].[ProgramChoice1]
+ADD CONSTRAINT [PK_ProgramChoice1]
+    PRIMARY KEY CLUSTERED ([ProgramChoiceId] ASC);
+GO
+
+-- Creating primary key on [ProgramId] in table 'Program1'
+ALTER TABLE [dbo].[Program1]
+ADD CONSTRAINT [PK_Program1]
+    PRIMARY KEY CLUSTERED ([ProgramId] ASC);
+GO
+
+-- Creating primary key on [ProvinceStateCode], [CountryCode] in table 'ProvinceState1'
+ALTER TABLE [dbo].[ProvinceState1]
+ADD CONSTRAINT [PK_ProvinceState1]
+    PRIMARY KEY CLUSTERED ([ProvinceStateCode], [CountryCode] ASC);
+GO
+
+-- Creating primary key on [AcademicYears_AcademicYearId], [Applications_ApplicationId] in table 'ApplicationAcademicYear'
+ALTER TABLE [dbo].[ApplicationAcademicYear]
+ADD CONSTRAINT [PK_ApplicationAcademicYear]
+    PRIMARY KEY CLUSTERED ([AcademicYears_AcademicYearId], [Applications_ApplicationId] ASC);
+GO
+
+-- Creating primary key on [Campus_CampusId], [Programs_ProgramId] in table 'CampusProgram'
+ALTER TABLE [dbo].[CampusProgram]
+ADD CONSTRAINT [PK_CampusProgram]
+    PRIMARY KEY CLUSTERED ([Campus_CampusId], [Programs_ProgramId] ASC);
+GO
+
+-- Creating primary key on [AcademicYears_AcademicYearId], [Applications_ApplicationId] in table 'ApplicationAcademicYear1'
+ALTER TABLE [dbo].[ApplicationAcademicYear1]
+ADD CONSTRAINT [PK_ApplicationAcademicYear1]
+    PRIMARY KEY CLUSTERED ([AcademicYears_AcademicYearId], [Applications_ApplicationId] ASC);
+GO
+
+-- Creating primary key on [Campus_CampusId], [Programs_ProgramId] in table 'CampusProgram1'
+ALTER TABLE [dbo].[CampusProgram1]
+ADD CONSTRAINT [PK_CampusProgram1]
+    PRIMARY KEY CLUSTERED ([Campus_CampusId], [Programs_ProgramId] ASC);
+GO
+
+-- --------------------------------------------------
+-- Creating all FOREIGN KEY constraints
+-- --------------------------------------------------
+
+-- Creating foreign key on [ApplicantId] in table 'Applications'
+ALTER TABLE [dbo].[Applications]
+ADD CONSTRAINT [FK_ApplicantApplication]
+    FOREIGN KEY ([ApplicantId])
+    REFERENCES [dbo].[Applicants]
+        ([ApplicantId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicantApplication'
+CREATE INDEX [IX_FK_ApplicantApplication]
+ON [dbo].[Applications]
+    ([ApplicantId]);
+GO
+
+-- Creating foreign key on [Citizenship] in table 'Applicants'
+ALTER TABLE [dbo].[Applicants]
+ADD CONSTRAINT [FK_CitizenshipApplicant]
+    FOREIGN KEY ([Citizenship])
+    REFERENCES [dbo].[Citizenships]
+        ([CitizenshipId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CitizenshipApplicant'
+CREATE INDEX [IX_FK_CitizenshipApplicant]
+ON [dbo].[Applicants]
+    ([Citizenship]);
+GO
+
+-- Creating foreign key on [CountryCode] in table 'Applicants'
+ALTER TABLE [dbo].[Applicants]
+ADD CONSTRAINT [FK_CountryApplicant]
+    FOREIGN KEY ([CountryCode])
+    REFERENCES [dbo].[Countries]
+        ([CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CountryApplicant'
+CREATE INDEX [IX_FK_CountryApplicant]
+ON [dbo].[Applicants]
+    ([CountryCode]);
+GO
+
+-- Creating foreign key on [CitizenshipOther] in table 'Applicants'
+ALTER TABLE [dbo].[Applicants]
+ADD CONSTRAINT [FK_CountryApplicant1]
+    FOREIGN KEY ([CitizenshipOther])
+    REFERENCES [dbo].[Countries]
+        ([CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CountryApplicant1'
+CREATE INDEX [IX_FK_CountryApplicant1]
+ON [dbo].[Applicants]
+    ([CitizenshipOther]);
+GO
+
+-- Creating foreign key on [ProvinceStateCode], [CountryCode] in table 'Applicants'
+ALTER TABLE [dbo].[Applicants]
+ADD CONSTRAINT [FK_ProvinceStateApplicant]
+    FOREIGN KEY ([ProvinceStateCode], [CountryCode])
+    REFERENCES [dbo].[ProvinceStates]
+        ([ProvinceStateCode], [CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProvinceStateApplicant'
+CREATE INDEX [IX_FK_ProvinceStateApplicant]
+ON [dbo].[Applicants]
+    ([ProvinceStateCode], [CountryCode]);
+GO
+
+-- Creating foreign key on [ApplicationId] in table 'ProgramChoices'
+ALTER TABLE [dbo].[ProgramChoices]
+ADD CONSTRAINT [FK_ApplicationProgramChoice]
+    FOREIGN KEY ([ApplicationId])
+    REFERENCES [dbo].[Applications]
+        ([ApplicationId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicationProgramChoice'
+CREATE INDEX [IX_FK_ApplicationProgramChoice]
+ON [dbo].[ProgramChoices]
+    ([ApplicationId]);
+GO
+
+-- Creating foreign key on [CampusId] in table 'ProgramChoices'
+ALTER TABLE [dbo].[ProgramChoices]
+ADD CONSTRAINT [FK_CampusProgramChoice]
+    FOREIGN KEY ([CampusId])
+    REFERENCES [dbo].[Campus1]
+        ([CampusId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampusProgramChoice'
+CREATE INDEX [IX_FK_CampusProgramChoice]
+ON [dbo].[ProgramChoices]
+    ([CampusId]);
+GO
+
+-- Creating foreign key on [CountryCode] in table 'ProvinceStates'
+ALTER TABLE [dbo].[ProvinceStates]
+ADD CONSTRAINT [FK_CountryProvinceState]
+    FOREIGN KEY ([CountryCode])
+    REFERENCES [dbo].[Countries]
+        ([CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CountryProvinceState'
+CREATE INDEX [IX_FK_CountryProvinceState]
+ON [dbo].[ProvinceStates]
+    ([CountryCode]);
+GO
+
+-- Creating foreign key on [ProgramId] in table 'ProgramChoices'
+ALTER TABLE [dbo].[ProgramChoices]
+ADD CONSTRAINT [FK_ProgramProgramChoice]
+    FOREIGN KEY ([ProgramId])
+    REFERENCES [dbo].[Programs]
+        ([ProgramId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProgramProgramChoice'
+CREATE INDEX [IX_FK_ProgramProgramChoice]
+ON [dbo].[ProgramChoices]
+    ([ProgramId]);
+GO
+
+-- Creating foreign key on [AcademicYears_AcademicYearId] in table 'ApplicationAcademicYear'
+ALTER TABLE [dbo].[ApplicationAcademicYear]
+ADD CONSTRAINT [FK_ApplicationAcademicYear_AcademicYears]
+    FOREIGN KEY ([AcademicYears_AcademicYearId])
+    REFERENCES [dbo].[AcademicYears]
+        ([AcademicYearId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Applications_ApplicationId] in table 'ApplicationAcademicYear'
+ALTER TABLE [dbo].[ApplicationAcademicYear]
+ADD CONSTRAINT [FK_ApplicationAcademicYear_Applications]
+    FOREIGN KEY ([Applications_ApplicationId])
+    REFERENCES [dbo].[Applications]
+        ([ApplicationId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicationAcademicYear_Applications'
+CREATE INDEX [IX_FK_ApplicationAcademicYear_Applications]
+ON [dbo].[ApplicationAcademicYear]
+    ([Applications_ApplicationId]);
+GO
+
+-- Creating foreign key on [Campus_CampusId] in table 'CampusProgram'
+ALTER TABLE [dbo].[CampusProgram]
+ADD CONSTRAINT [FK_CampusProgram_Campus]
+    FOREIGN KEY ([Campus_CampusId])
+    REFERENCES [dbo].[Campus1]
+        ([CampusId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Programs_ProgramId] in table 'CampusProgram'
+ALTER TABLE [dbo].[CampusProgram]
+ADD CONSTRAINT [FK_CampusProgram_Programs]
+    FOREIGN KEY ([Programs_ProgramId])
+    REFERENCES [dbo].[Programs]
+        ([ProgramId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampusProgram_Programs'
+CREATE INDEX [IX_FK_CampusProgram_Programs]
+ON [dbo].[CampusProgram]
+    ([Programs_ProgramId]);
+GO
+
+-- Creating foreign key on [AcademicYears_AcademicYearId] in table 'ApplicationAcademicYear1'
+ALTER TABLE [dbo].[ApplicationAcademicYear1]
+ADD CONSTRAINT [FK_ApplicationAcademicYear1_AcademicYear1]
+    FOREIGN KEY ([AcademicYears_AcademicYearId])
+    REFERENCES [dbo].[AcademicYear1]
+        ([AcademicYearId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Applications_ApplicationId] in table 'ApplicationAcademicYear1'
+ALTER TABLE [dbo].[ApplicationAcademicYear1]
+ADD CONSTRAINT [FK_ApplicationAcademicYear1_Application1]
+    FOREIGN KEY ([Applications_ApplicationId])
+    REFERENCES [dbo].[Application1]
+        ([ApplicationId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicationAcademicYear1_Application1'
+CREATE INDEX [IX_FK_ApplicationAcademicYear1_Application1]
+ON [dbo].[ApplicationAcademicYear1]
+    ([Applications_ApplicationId]);
+GO
+
+-- Creating foreign key on [ApplicantId] in table 'Application1'
+ALTER TABLE [dbo].[Application1]
+ADD CONSTRAINT [FK_ApplicantApplication1]
+    FOREIGN KEY ([ApplicantId])
+    REFERENCES [dbo].[Applicant1]
+        ([ApplicantId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicantApplication1'
+CREATE INDEX [IX_FK_ApplicantApplication1]
+ON [dbo].[Application1]
+    ([ApplicantId]);
+GO
+
+-- Creating foreign key on [Citizenship] in table 'Applicant1'
+ALTER TABLE [dbo].[Applicant1]
+ADD CONSTRAINT [FK_CitizenshipApplicant1]
+    FOREIGN KEY ([Citizenship])
+    REFERENCES [dbo].[Citizenship1]
+        ([CitizenshipId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CitizenshipApplicant1'
+CREATE INDEX [IX_FK_CitizenshipApplicant1]
+ON [dbo].[Applicant1]
+    ([Citizenship]);
+GO
+
+-- Creating foreign key on [CountryCode] in table 'Applicant1'
+ALTER TABLE [dbo].[Applicant1]
+ADD CONSTRAINT [FK_CountryApplicant2]
+    FOREIGN KEY ([CountryCode])
+    REFERENCES [dbo].[Country1]
+        ([CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CountryApplicant2'
+CREATE INDEX [IX_FK_CountryApplicant2]
+ON [dbo].[Applicant1]
+    ([CountryCode]);
+GO
+
+-- Creating foreign key on [CitizenshipOther] in table 'Applicant1'
+ALTER TABLE [dbo].[Applicant1]
+ADD CONSTRAINT [FK_CountryApplicant11]
+    FOREIGN KEY ([CitizenshipOther])
+    REFERENCES [dbo].[Country1]
+        ([CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CountryApplicant11'
+CREATE INDEX [IX_FK_CountryApplicant11]
+ON [dbo].[Applicant1]
+    ([CitizenshipOther]);
+GO
+
+-- Creating foreign key on [ProvinceStateCode], [CountryCode] in table 'Applicant1'
+ALTER TABLE [dbo].[Applicant1]
+ADD CONSTRAINT [FK_ProvinceStateApplicant1]
+    FOREIGN KEY ([ProvinceStateCode], [CountryCode])
+    REFERENCES [dbo].[ProvinceState1]
+        ([ProvinceStateCode], [CountryCode])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProvinceStateApplicant1'
+CREATE INDEX [IX_FK_ProvinceStateApplicant1]
+ON [dbo].[Applicant1]
+    ([ProvinceStateCode], [CountryCode]);
+GO
+
+-- Creating foreign key on [CampusId] in table 'ProgramChoice1'
+ALTER TABLE [dbo].[ProgramChoice1]
+ADD CONSTRAINT [FK_CampusProgramChoice1]
+    FOREIGN KEY ([CampusId])
+    REFERENCES [dbo].[Campus11]
+        ([CampusId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampusProgramChoice1'
+CREATE INDEX [IX_FK_CampusProgramChoice1]
+ON [dbo].[ProgramChoice1]
+    ([CampusId]);
+GO
+
+-- Creating foreign key on [Campus_CampusId] in table 'CampusProgram1'
+ALTER TABLE [dbo].[CampusProgram1]
+ADD CONSTRAINT [FK_CampusProgram1_Campus1]
+    FOREIGN KEY ([Campus_CampusId])
+    REFERENCES [dbo].[Campus11]
+        ([CampusId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Programs_ProgramId] in table 'CampusProgram1'
+ALTER TABLE [dbo].[CampusProgram1]
+ADD CONSTRAINT [FK_CampusProgram1_Program1]
+    FOREIGN KEY ([Programs_ProgramId])
+    REFERENCES [dbo].[Program1]
+        ([ProgramId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampusProgram1_Program1'
+CREATE INDEX [IX_FK_CampusProgram1_Program1]
+ON [dbo].[CampusProgram1]
+    ([Programs_ProgramId]);
+GO
+
+-- Creating foreign key on [ApplicationId] in table 'ProgramChoice1'
+ALTER TABLE [dbo].[ProgramChoice1]
+ADD CONSTRAINT [FK_ApplicationProgramChoice1]
+    FOREIGN KEY ([ApplicationId])
+    REFERENCES [dbo].[Application1]
+        ([ApplicationId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ApplicationProgramChoice1'
+CREATE INDEX [IX_FK_ApplicationProgramChoice1]
+ON [dbo].[ProgramChoice1]
+    ([ApplicationId]);
+GO
+
+-- Creating foreign key on [ProgramId] in table 'ProgramChoice1'
+ALTER TABLE [dbo].[ProgramChoice1]
+ADD CONSTRAINT [FK_ProgramProgramChoice1]
+    FOREIGN KEY ([ProgramId])
+    REFERENCES [dbo].[Program1]
+        ([ProgramId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProgramProgramChoice1'
+CREATE INDEX [IX_FK_ProgramProgramChoice1]
+ON [dbo].[ProgramChoice1]
+    ([ProgramId]);
+GO
+
+-- --------------------------------------------------
+-- Script has ended
+-- --------------------------------------------------
